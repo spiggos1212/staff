@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Avelink — Check-in Tracker</title>
+  <style>
+    body {
+      font-family: system-ui, sans-serif;
+      max-width: 460px;
+      margin: 40px auto;
+      padding: 0 20px;
+      background: #0f172a;
+      color: #e2e8f0;
+      text-align: center;
+    }
+    #greeting { font-size: 18px; color: #94a3b8; }
+    #clock { font-size: 40px; font-weight: 700; margin: 8px 0 30px; }
+    .counter {
+      background: #1e293b;
+      border-radius: 12px;
+      padding: 20px;
+      margin: 14px 0;
+    }
+    .counter h2 { margin: 0 0 12px; font-size: 16px; color: #94a3b8; }
+    .count { font-size: 48px; font-weight: 700; }
+    .buttons { margin-top: 12px; }
+    button {
+      font-size: 22px;
+      width: 60px;
+      height: 60px;
+      margin: 0 6px;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      color: white;
+    }
+    .plus { background: #2563eb; }
+    .minus { background: #2563eb; }
+  </style>
+</head>
+<body>
+  <div id="greeting"></div>
+  <div id="clock"></div>
+
+  <div class="counter">
+    <h2>Check-ins σήμερα</h2>
+    <div class="count" id="checkins">0</div>
+    <div class="buttons">
+      <button class="minus" onclick="change('checkins', -1)">−</button>
+      <button class="plus" onclick="change('checkins', 1)">+</button>
+    </div>
+  </div>
+
+  <div class="counter">
+    <h2>Check-outs σήμερα</h2>
+    <div class="count" id="checkouts">0</div>
+    <div class="buttons">
+      <button class="minus" onclick="change('checkouts', -1)">−</button>
+      <button class="plus" onclick="change('checkouts', 1)">+</button>
+    </div>
+  </div>
+
+  <div class="counter">
+    <h2>Ακυρώσεις σήμερα</h2>
+    <div class="count" id="cancellations">0</div>
+    <div class="buttons">
+      <button class="minus" onclick="change('cancellations', -1)">−</button>
+      <button class="plus" onclick="change('cancellations', 1)">+</button>
+    </div>
+  </div>
+
+  <script>
+    // --- Μετρητές ---
+    const STORAGE_KEY = 'avelink-checkin-counts';
+
+    function todayStr() {
+      const now = new Date();
+      return now.getFullYear() + '-' + (now.getMonth() + 1) + '-' + now.getDate();
+    }
+
+    function loadCounts() {
+      try {
+        const saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
+        if (saved && saved.date === todayStr()) {
+          return {
+            checkins: saved.checkins || 0,
+            checkouts: saved.checkouts || 0,
+            cancellations: saved.cancellations || 0
+          };
+        }
+      } catch (e) {}
+      return { checkins: 0, checkouts: 0, cancellations: 0 };
+    }
+
+    function saveCounts() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify({ date: todayStr(), ...counts }));
+    }
+
+    let counts = loadCounts();
+    document.getElementById('checkins').textContent = counts.checkins;
+    document.getElementById('checkouts').textContent = counts.checkouts;
+    document.getElementById('cancellations').textContent = counts.cancellations;
+
+    function change(id, delta) {
+      counts[id] = counts[id] + delta;
+      if (counts[id] < 0) counts[id] = 0;   // δεν πάμε κάτω από 0
+      document.getElementById(id).textContent = counts[id];
+      saveCounts();
+    }
+
+    // --- Ρολόι + χαιρετισμός ---
+    function updateClock() {
+      const now = new Date();
+      const time = now.toLocaleTimeString('el-GR');
+      document.getElementById('clock').textContent = time;
+
+      const hour = now.getHours();
+      let greeting;
+      if (hour < 12) greeting = 'Καλημέρα ☀️';
+      else if (hour < 18) greeting = 'Καλό απόγευμα 🌤️';
+      else greeting = 'Καλησπέρα 🌙';
+      document.getElementById('greeting').textContent = greeting;
+    }
+
+    updateClock();
+    setInterval(updateClock, 1000);  // ενημέρωση κάθε δευτερόλεπτο
+  </script>
+</body>
+</html>
