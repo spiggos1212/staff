@@ -24,11 +24,19 @@
     #analog-clock .second-hand { stroke: #2563eb; stroke-width: 2; }
     #analog-clock .center-dot { fill: #2563eb; }
     #clock { font-size: 40px; font-weight: 700; margin: 8px 0 30px; }
+    .checkin-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+    }
+    .bat-icon { width: 64px; height: 64px; flex-shrink: 0; fill: #facc15; }
     .counter {
       background: #1e293b;
       border-radius: 12px;
       padding: 20px;
       margin: 14px 0;
+      flex: 1;
     }
     .counter h2 { margin: 0 0 12px; font-size: 16px; color: #94a3b8; }
     .count { font-size: 48px; font-weight: 700; }
@@ -61,30 +69,17 @@
 
   <div id="clock"></div>
 
-  <div class="counter">
-    <h2>Check-ins σήμερα</h2>
-    <div class="count" id="checkins">0</div>
-    <div class="buttons">
-      <button class="minus" onclick="change('checkins', -1)">−</button>
-      <button class="plus" onclick="change('checkins', 1)">+</button>
-    </div>
-  </div>
-
-  <div class="counter">
-    <h2>Check-outs σήμερα</h2>
-    <div class="count" id="checkouts">0</div>
-    <div class="buttons">
-      <button class="minus" onclick="change('checkouts', -1)">−</button>
-      <button class="plus" onclick="change('checkouts', 1)">+</button>
-    </div>
-  </div>
-
-  <div class="counter">
-    <h2>Ακυρώσεις σήμερα</h2>
-    <div class="count" id="cancellations">0</div>
-    <div class="buttons">
-      <button class="minus" onclick="change('cancellations', -1)">−</button>
-      <button class="plus" onclick="change('cancellations', 1)">+</button>
+  <div class="checkin-row">
+    <svg class="bat-icon" viewBox="0 0 100 60" xmlns="http://www.w3.org/2000/svg">
+      <path d="M50 8 C48 2 44 0 42 4 C40 -1 33 0 33 7 C24 3 8 6 0 18 C10 15 18 16 24 20 C14 20 4 26 0 36 C10 30 20 28 28 30 C20 33 10 40 8 50 C18 42 28 38 36 38 C33 44 34 52 40 58 C39 48 43 40 50 38 C57 40 61 48 60 58 C66 52 67 44 64 38 C72 38 82 42 92 50 C90 40 80 33 72 30 C80 28 90 30 100 36 C96 26 86 20 76 20 C82 16 90 15 100 18 C92 6 76 3 67 7 C67 0 60 -1 58 4 C56 0 52 2 50 8 Z" />
+    </svg>
+    <div class="counter">
+      <h2>Check-ins σήμερα</h2>
+      <div class="count" id="checkins">0</div>
+      <div class="buttons">
+        <button class="minus" onclick="change('checkins', -1)">−</button>
+        <button class="plus" onclick="change('checkins', 1)">+</button>
+      </div>
     </div>
   </div>
 
@@ -101,14 +96,10 @@
       try {
         const saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
         if (saved && saved.date === todayStr()) {
-          return {
-            checkins: saved.checkins || 0,
-            checkouts: saved.checkouts || 0,
-            cancellations: saved.cancellations || 0
-          };
+          return { checkins: saved.checkins || 0 };
         }
       } catch (e) {}
-      return { checkins: 0, checkouts: 0, cancellations: 0 };
+      return { checkins: 0 };
     }
 
     function saveCounts() {
@@ -117,8 +108,6 @@
 
     let counts = loadCounts();
     document.getElementById('checkins').textContent = counts.checkins;
-    document.getElementById('checkouts').textContent = counts.checkouts;
-    document.getElementById('cancellations').textContent = counts.cancellations;
 
     function change(id, delta) {
       counts[id] = counts[id] + delta;
