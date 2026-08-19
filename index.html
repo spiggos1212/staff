@@ -3,206 +3,89 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Καλημέρα Andreas</title>
-  <style>
-    body {
-      font-family: system-ui, sans-serif;
-      max-width: 460px;
-      margin: 40px auto;
-      padding: 0 20px;
-      background: #0f172a;
-      color: #e2e8f0;
-      text-align: center;
-    }
-    #greeting { font-size: 18px; color: #94a3b8; }
-    #analog-clock { margin: 12px auto 0; display: block; }
-    #analog-clock .face { fill: #1e293b; stroke: #334155; stroke-width: 3; }
-    #analog-clock .tick { stroke: #64748b; stroke-width: 2; }
-    #analog-clock .hand { stroke-linecap: round; transform-origin: 100px 100px; }
-    #analog-clock .hour-hand { stroke: #e2e8f0; stroke-width: 6; }
-    #analog-clock .minute-hand { stroke: #e2e8f0; stroke-width: 4; }
-    #analog-clock .second-hand { stroke: #2563eb; stroke-width: 2; }
-    #analog-clock .center-dot { fill: #2563eb; }
-    #clock { font-size: 40px; font-weight: 700; margin: 8px 0 30px; }
-    .checkin-row {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 16px;
-    }
-    .bat-photo {
-      width: 92px;
-      height: 122px;
-      flex-shrink: 0;
-      border-radius: 10px;
-      overflow: hidden;
-      box-shadow: 0 4px 14px rgba(0,0,0,0.5);
-      border: 1px solid #334155;
-    }
-    .bat-photo svg { display: block; width: 100%; height: 100%; }
-    .counter {
-      background: #1e293b;
-      border-radius: 12px;
-      padding: 20px;
-      margin: 14px 0;
-      flex: 1;
-    }
-    .counter h2 { margin: 0 0 12px; font-size: 16px; color: #94a3b8; }
-    .count { font-size: 48px; font-weight: 700; }
-    .buttons { margin-top: 12px; }
-    button {
-      font-size: 22px;
-      width: 60px;
-      height: 60px;
-      margin: 0 6px;
-      border: none;
-      border-radius: 10px;
-      cursor: pointer;
-      color: white;
-    }
-    .plus { background: #2563eb; }
-    .minus { background: #2563eb; }
-  </style>
+  <title>Οικονομικό Dashboard</title>
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <div id="greeting"></div>
-
-  <svg id="analog-clock" width="180" height="180" viewBox="0 0 200 200">
-    <circle class="face" cx="100" cy="100" r="95" />
-    <g id="ticks"></g>
-    <line class="hand hour-hand" id="hour-hand" x1="100" y1="100" x2="100" y2="55" />
-    <line class="hand minute-hand" id="minute-hand" x1="100" y1="100" x2="100" y2="35" />
-    <line class="hand second-hand" id="second-hand" x1="100" y1="112" x2="100" y2="25" />
-    <circle class="center-dot" cx="100" cy="100" r="5" />
-  </svg>
-
-  <div id="clock"></div>
-
-  <div class="checkin-row">
-    <div class="bat-photo">
-      <svg viewBox="0 0 92 122" xmlns="http://www.w3.org/2000/svg">
-        <defs>
-          <linearGradient id="skyGrad" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0" stop-color="#0b1220" />
-            <stop offset="1" stop-color="#1e293b" />
-          </linearGradient>
-          <radialGradient id="moonGlow" cx="50%" cy="50%" r="50%">
-            <stop offset="0" stop-color="#fde68a" stop-opacity="0.55" />
-            <stop offset="1" stop-color="#fde68a" stop-opacity="0" />
-          </radialGradient>
-        </defs>
-
-        <rect width="92" height="122" fill="url(#skyGrad)" />
-
-        <circle cx="66" cy="28" r="22" fill="url(#moonGlow)" />
-        <circle cx="66" cy="28" r="11" fill="#fde68a" />
-
-        <circle cx="12" cy="14" r="0.8" fill="#e2e8f0" />
-        <circle cx="24" cy="8" r="0.6" fill="#e2e8f0" />
-        <circle cx="80" cy="60" r="0.7" fill="#e2e8f0" />
-        <circle cx="8" cy="45" r="0.6" fill="#e2e8f0" />
-
-        <path d="M0 104 L8 104 L8 92 L16 92 L16 104 L24 104 L24 82 L34 82 L34 104 L50 104 L50 96 L58 96 L58 104 L70 104 L70 88 L80 88 L80 104 L92 104 L92 122 L0 122 Z" fill="#020617" />
-
-        <path d="M46 60 C33 58 15 74 12 100 C22 96 32 90 40 82 L46 68 Z" fill="#020617" />
-        <path d="M46 60 C59 58 77 74 80 100 C70 96 60 90 52 82 L46 68 Z" fill="#020617" />
-
-        <circle cx="46" cy="55" r="9" fill="#020617" />
-        <path d="M39 50 L34 38 L44 48 Z" fill="#020617" />
-        <path d="M53 50 L58 38 L48 48 Z" fill="#020617" />
-
-        <path d="M39 63 L36 104 L44 104 L45 82 L47 82 L48 104 L56 104 L53 63 Z" fill="#020617" />
-      </svg>
+  <div class="top-nav">
+    <div>
+      <h1>Οικονομικό Dashboard</h1>
+      <p class="subtitle">Έσοδα, έξοδα &amp; καθαρό κέρδος της εταιρείας</p>
     </div>
-    <div class="counter">
-      <h2>Check-ins σήμερα</h2>
-      <div class="count" id="checkins">0</div>
-      <div class="buttons">
-        <button class="minus" onclick="change('checkins', -1)">−</button>
-        <button class="plus" onclick="change('checkins', 1)">+</button>
-      </div>
+    <a class="nav-link" href="input.html">+ Νέα καταχώρηση</a>
+  </div>
+
+  <div class="stat-grid">
+    <div class="stat-tile">
+      <p class="stat-label">Έσοδα</p>
+      <p class="stat-value good" id="stat-income">€0,00</p>
+    </div>
+    <div class="stat-tile">
+      <p class="stat-label">Έξοδα</p>
+      <p class="stat-value critical" id="stat-expenses">€0,00</p>
+    </div>
+    <div class="stat-tile">
+      <p class="stat-label">Καθαρό κέρδος</p>
+      <p class="stat-value" id="stat-net">€0,00</p>
     </div>
   </div>
 
+  <div class="panel">
+    <h2>Έσοδα vs Έξοδα</h2>
+    <div class="bar-row">
+      <span class="bar-label">Έσοδα</span>
+      <div class="bar-track"><div class="bar-fill income" id="bar-income" style="width:0%"></div></div>
+      <span class="bar-value" id="bar-income-value">€0,00</span>
+    </div>
+    <div class="bar-row">
+      <span class="bar-label">Έξοδα</span>
+      <div class="bar-track"><div class="bar-fill expense" id="bar-expense" style="width:0%"></div></div>
+      <span class="bar-value" id="bar-expense-value">€0,00</span>
+    </div>
+  </div>
+
+  <div class="panel">
+    <h2>Καταχωρήσεις</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Ημερομηνία</th>
+          <th>Τύπος</th>
+          <th>Περιγραφή</th>
+          <th style="text-align:right;">Ποσό</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody id="transactions-body"></tbody>
+    </table>
+  </div>
+
+  <script src="finance.js"></script>
   <script>
-    // --- Μετρητές ---
-    const STORAGE_KEY = 'avelink-checkin-counts';
+    function render() {
+      const list = loadTransactions();
+      const { income, expenses, net } = computeTotals(list);
 
-    function todayStr() {
-      const now = new Date();
-      return now.getFullYear() + '-' + (now.getMonth() + 1) + '-' + now.getDate();
+      document.getElementById('stat-income').textContent = formatCurrency(income);
+      document.getElementById('stat-expenses').textContent = formatCurrency(expenses);
+
+      const netEl = document.getElementById('stat-net');
+      netEl.textContent = (net >= 0 ? '▲ ' : '▼ ') + formatCurrency(Math.abs(net));
+      netEl.className = 'stat-value ' + (net >= 0 ? 'good' : 'critical');
+
+      const max = Math.max(income, expenses, 1);
+      document.getElementById('bar-income').style.width = (income / max * 100) + '%';
+      document.getElementById('bar-expense').style.width = (expenses / max * 100) + '%';
+      document.getElementById('bar-income-value').textContent = formatCurrency(income);
+      document.getElementById('bar-expense-value').textContent = formatCurrency(expenses);
+
+      renderTransactionRows(document.getElementById('transactions-body'), list, (id) => {
+        saveTransactions(loadTransactions().filter((t) => t.id !== id));
+        render();
+      });
     }
 
-    function loadCounts() {
-      try {
-        const saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
-        if (saved && saved.date === todayStr()) {
-          return { checkins: saved.checkins || 0 };
-        }
-      } catch (e) {}
-      return { checkins: 0 };
-    }
-
-    function saveCounts() {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify({ date: todayStr(), ...counts }));
-    }
-
-    let counts = loadCounts();
-    document.getElementById('checkins').textContent = counts.checkins;
-
-    function change(id, delta) {
-      counts[id] = counts[id] + delta;
-      if (counts[id] < 0) counts[id] = 0;   // δεν πάμε κάτω από 0
-      document.getElementById(id).textContent = counts[id];
-      saveCounts();
-    }
-
-    // --- Αναλογικό ρολόι: χαράξεις ωρών ---
-    const ticksGroup = document.getElementById('ticks');
-    for (let i = 0; i < 12; i++) {
-      const angle = i * 30;
-      const tick = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-      tick.setAttribute('class', 'tick');
-      tick.setAttribute('x1', '100');
-      tick.setAttribute('y1', '10');
-      tick.setAttribute('x2', '100');
-      tick.setAttribute('y2', i % 3 === 0 ? '22' : '18');
-      tick.setAttribute('transform', `rotate(${angle} 100 100)`);
-      ticksGroup.appendChild(tick);
-    }
-
-    const hourHand = document.getElementById('hour-hand');
-    const minuteHand = document.getElementById('minute-hand');
-    const secondHand = document.getElementById('second-hand');
-
-    // --- Ρολόι (αναλογικό + ψηφιακό) + χαιρετισμός ---
-    function updateClock() {
-      const now = new Date();
-      const time = now.toLocaleTimeString('el-GR');
-      document.getElementById('clock').textContent = time;
-
-      const hour = now.getHours();
-      let greeting;
-      if (hour < 12) greeting = 'Καλημέρα ☀️';
-      else if (hour < 18) greeting = 'Καλό απόγευμα 🌤️';
-      else greeting = 'Καλησπέρα 🌙';
-      document.getElementById('greeting').textContent = greeting;
-
-      const seconds = now.getSeconds();
-      const minutes = now.getMinutes();
-      const hours = now.getHours() % 12;
-
-      const secondDeg = seconds * 6;
-      const minuteDeg = minutes * 6 + seconds * 0.1;
-      const hourDeg = hours * 30 + minutes * 0.5;
-
-      secondHand.style.transform = `rotate(${secondDeg}deg)`;
-      minuteHand.style.transform = `rotate(${minuteDeg}deg)`;
-      hourHand.style.transform = `rotate(${hourDeg}deg)`;
-    }
-
-    updateClock();
-    setInterval(updateClock, 1000);  // ενημέρωση κάθε δευτερόλεπτο
+    render();
   </script>
 </body>
 </html>

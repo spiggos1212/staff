@@ -1,0 +1,158 @@
+* { box-sizing: border-box; }
+
+:root { color-scheme: dark; }
+
+body {
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  max-width: 720px;
+  margin: 40px auto;
+  padding: 0 20px 60px;
+  background: #0f172a;
+  color: #e2e8f0;
+}
+
+a { color: #3987e5; }
+
+h1 { font-size: 22px; margin: 0 0 4px; }
+.subtitle { color: #94a3b8; font-size: 14px; margin: 0; }
+
+.top-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.nav-link {
+  display: inline-block;
+  background: #2563eb;
+  color: #fff;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 10px 16px;
+  border-radius: 8px;
+  white-space: nowrap;
+}
+.nav-link.secondary {
+  background: transparent;
+  color: #94a3b8;
+  border: 1px solid #334155;
+}
+
+/* --- Stat tiles --- */
+.stat-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-bottom: 24px;
+}
+.stat-tile {
+  background: #1e293b;
+  border: 1px solid #334155;
+  border-radius: 12px;
+  padding: 16px;
+}
+.stat-label { font-size: 13px; color: #94a3b8; margin: 0 0 8px; }
+.stat-value { font-size: 22px; font-weight: 700; margin: 0; }
+.stat-value.good { color: #0ca30c; }
+.stat-value.critical { color: #d03b3b; }
+
+/* --- Panels --- */
+.panel {
+  background: #1e293b;
+  border: 1px solid #334155;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 24px;
+}
+.panel h2 { font-size: 15px; color: #94a3b8; margin: 0 0 16px; font-weight: 600; }
+
+/* --- Bar comparison chart --- */
+.bar-row { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+.bar-row:last-child { margin-bottom: 0; }
+.bar-label { width: 56px; font-size: 13px; color: #94a3b8; flex-shrink: 0; }
+.bar-track { flex: 1; background: #0f172a; border-radius: 6px; height: 22px; overflow: hidden; }
+.bar-fill { height: 100%; border-radius: 4px; min-width: 4px; transition: width 0.3s ease; }
+.bar-fill.income { background: #0ca30c; }
+.bar-fill.expense { background: #d03b3b; }
+.bar-value {
+  width: 100px;
+  text-align: right;
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+  flex-shrink: 0;
+}
+
+/* --- Transactions table --- */
+table { width: 100%; border-collapse: collapse; font-size: 14px; }
+th {
+  text-align: left;
+  color: #94a3b8;
+  font-weight: 600;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  padding: 8px;
+  border-bottom: 1px solid #334155;
+}
+td { padding: 10px 8px; }
+tbody tr { border-bottom: 1px solid #273449; }
+tbody tr:last-child { border-bottom: none; }
+.amount-cell { font-variant-numeric: tabular-nums; font-weight: 600; text-align: right; white-space: nowrap; }
+.amount-income { color: #4ade80; }
+.amount-expense { color: #f87171; }
+.type-badge { font-size: 12px; padding: 3px 8px; border-radius: 999px; font-weight: 600; white-space: nowrap; }
+.type-income { background: rgba(12, 163, 12, 0.15); color: #4ade80; }
+.type-expense { background: rgba(208, 59, 59, 0.15); color: #f87171; }
+.desc-cell { color: #cbd5e1; }
+.empty-row { text-align: center; color: #64748b; padding: 24px 8px; }
+.delete-btn { background: none; border: none; cursor: pointer; font-size: 15px; opacity: 0.7; }
+.delete-btn:hover { opacity: 1; }
+
+/* --- Entry form --- */
+.entry-form { display: grid; gap: 14px; }
+.field { display: grid; gap: 6px; }
+.field label { font-size: 13px; color: #94a3b8; }
+.field input, .field select {
+  background: #0f172a;
+  border: 1px solid #334155;
+  border-radius: 8px;
+  padding: 10px 12px;
+  color: #e2e8f0;
+  font-size: 15px;
+  font-family: inherit;
+}
+.field input:focus, .field select:focus { outline: 2px solid #2563eb; outline-offset: 1px; }
+
+.submit-btn {
+  background: #2563eb;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 16px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.submit-btn:hover { background: #1d4ed8; }
+
+.type-toggle { display: flex; gap: 8px; }
+.type-toggle button {
+  flex: 1;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #334155;
+  background: #0f172a;
+  color: #94a3b8;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.type-toggle button.income-active { background: rgba(12, 163, 12, 0.15); border-color: #0ca30c; color: #4ade80; }
+.type-toggle button.expense-active { background: rgba(208, 59, 59, 0.15); border-color: #d03b3b; color: #f87171; }
+
+@media (max-width: 480px) {
+  .stat-grid { grid-template-columns: 1fr; }
+}
