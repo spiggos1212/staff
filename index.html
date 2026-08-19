@@ -15,6 +15,14 @@
       text-align: center;
     }
     #greeting { font-size: 18px; color: #94a3b8; }
+    #analog-clock { margin: 12px auto 0; display: block; }
+    #analog-clock .face { fill: #1e293b; stroke: #334155; stroke-width: 3; }
+    #analog-clock .tick { stroke: #64748b; stroke-width: 2; }
+    #analog-clock .hand { stroke-linecap: round; transform-origin: 100px 100px; }
+    #analog-clock .hour-hand { stroke: #e2e8f0; stroke-width: 6; }
+    #analog-clock .minute-hand { stroke: #e2e8f0; stroke-width: 4; }
+    #analog-clock .second-hand { stroke: #2563eb; stroke-width: 2; }
+    #analog-clock .center-dot { fill: #2563eb; }
     #clock { font-size: 40px; font-weight: 700; margin: 8px 0 30px; }
     .counter {
       background: #1e293b;
@@ -41,6 +49,16 @@
 </head>
 <body>
   <div id="greeting"></div>
+
+  <svg id="analog-clock" width="180" height="180" viewBox="0 0 200 200">
+    <circle class="face" cx="100" cy="100" r="95" />
+    <g id="ticks"></g>
+    <line class="hand hour-hand" id="hour-hand" x1="100" y1="100" x2="100" y2="55" />
+    <line class="hand minute-hand" id="minute-hand" x1="100" y1="100" x2="100" y2="35" />
+    <line class="hand second-hand" id="second-hand" x1="100" y1="112" x2="100" y2="25" />
+    <circle class="center-dot" cx="100" cy="100" r="5" />
+  </svg>
+
   <div id="clock"></div>
 
   <div class="counter">
@@ -109,7 +127,25 @@
       saveCounts();
     }
 
-    // --- Ρολόι + χαιρετισμός ---
+    // --- Αναλογικό ρολόι: χαράξεις ωρών ---
+    const ticksGroup = document.getElementById('ticks');
+    for (let i = 0; i < 12; i++) {
+      const angle = i * 30;
+      const tick = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+      tick.setAttribute('class', 'tick');
+      tick.setAttribute('x1', '100');
+      tick.setAttribute('y1', '10');
+      tick.setAttribute('x2', '100');
+      tick.setAttribute('y2', i % 3 === 0 ? '22' : '18');
+      tick.setAttribute('transform', `rotate(${angle} 100 100)`);
+      ticksGroup.appendChild(tick);
+    }
+
+    const hourHand = document.getElementById('hour-hand');
+    const minuteHand = document.getElementById('minute-hand');
+    const secondHand = document.getElementById('second-hand');
+
+    // --- Ρολόι (αναλογικό + ψηφιακό) + χαιρετισμός ---
     function updateClock() {
       const now = new Date();
       const time = now.toLocaleTimeString('el-GR');
@@ -121,6 +157,18 @@
       else if (hour < 18) greeting = 'Καλό απόγευμα 🌤️';
       else greeting = 'Καλησπέρα 🌙';
       document.getElementById('greeting').textContent = greeting;
+
+      const seconds = now.getSeconds();
+      const minutes = now.getMinutes();
+      const hours = now.getHours() % 12;
+
+      const secondDeg = seconds * 6;
+      const minuteDeg = minutes * 6 + seconds * 0.1;
+      const hourDeg = hours * 30 + minutes * 0.5;
+
+      secondHand.style.transform = `rotate(${secondDeg}deg)`;
+      minuteHand.style.transform = `rotate(${minuteDeg}deg)`;
+      hourHand.style.transform = `rotate(${hourDeg}deg)`;
     }
 
     updateClock();
