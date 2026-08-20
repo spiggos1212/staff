@@ -15,6 +15,17 @@
     <a class="nav-link" href="input.html">+ Νέα καταχώρηση</a>
   </div>
 
+  <div class="clock-wrap">
+    <svg id="analog-clock" width="260" height="260" viewBox="0 0 200 200">
+      <circle class="face" cx="100" cy="100" r="95" />
+      <g id="ticks"></g>
+      <line class="hand hour-hand" id="hour-hand" x1="100" y1="100" x2="100" y2="55" />
+      <line class="hand minute-hand" id="minute-hand" x1="100" y1="100" x2="100" y2="35" />
+      <line class="hand second-hand" id="second-hand" x1="100" y1="112" x2="100" y2="25" />
+      <circle class="center-dot" cx="100" cy="100" r="5" />
+    </svg>
+  </div>
+
   <div class="stat-grid">
     <div class="stat-tile">
       <p class="stat-label">Έσοδα</p>
@@ -62,6 +73,42 @@
 
   <script src="finance.js"></script>
   <script>
+    // --- Αναλογικό ρολόι: χαράξεις ωρών ---
+    const ticksGroup = document.getElementById('ticks');
+    for (let i = 0; i < 12; i++) {
+      const angle = i * 30;
+      const tick = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+      tick.setAttribute('class', 'tick');
+      tick.setAttribute('x1', '100');
+      tick.setAttribute('y1', '10');
+      tick.setAttribute('x2', '100');
+      tick.setAttribute('y2', i % 3 === 0 ? '22' : '18');
+      tick.setAttribute('transform', `rotate(${angle} 100 100)`);
+      ticksGroup.appendChild(tick);
+    }
+
+    const hourHand = document.getElementById('hour-hand');
+    const minuteHand = document.getElementById('minute-hand');
+    const secondHand = document.getElementById('second-hand');
+
+    function updateClock() {
+      const now = new Date();
+      const seconds = now.getSeconds();
+      const minutes = now.getMinutes();
+      const hours = now.getHours() % 12;
+
+      const secondDeg = seconds * 6;
+      const minuteDeg = minutes * 6 + seconds * 0.1;
+      const hourDeg = hours * 30 + minutes * 0.5;
+
+      secondHand.style.transform = `rotate(${secondDeg}deg)`;
+      minuteHand.style.transform = `rotate(${minuteDeg}deg)`;
+      hourHand.style.transform = `rotate(${hourDeg}deg)`;
+    }
+
+    updateClock();
+    setInterval(updateClock, 1000);
+
     function render() {
       const list = loadTransactions();
       const { income, expenses, net } = computeTotals(list);

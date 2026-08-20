@@ -41,6 +41,16 @@ h1 { font-size: 22px; margin: 0 0 4px; }
   border: 1px solid #334155;
 }
 
+/* --- Analog clock --- */
+.clock-wrap { display: flex; justify-content: center; margin-bottom: 24px; }
+#analog-clock .face { fill: #1e293b; stroke: #334155; stroke-width: 3; }
+#analog-clock .tick { stroke: #64748b; stroke-width: 2; }
+#analog-clock .hand { stroke-linecap: round; transform-origin: 100px 100px; }
+#analog-clock .hour-hand { stroke: #e2e8f0; stroke-width: 6; }
+#analog-clock .minute-hand { stroke: #e2e8f0; stroke-width: 4; }
+#analog-clock .second-hand { stroke: #2563eb; stroke-width: 2; }
+#analog-clock .center-dot { fill: #2563eb; }
+
 /* --- Stat tiles --- */
 .stat-grid {
   display: grid;
