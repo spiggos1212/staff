@@ -6,370 +6,331 @@
 <title>Ιωσήφ &amp; Ναταλία | Γάμος</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Mrs+Saint+Delafield&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,500&family=Cinzel:wght@500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Mynerve&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet">
 <style>
   :root{
-    --turquoise: #0f9b96;
-    --turquoise-deep: #0b7873;
-    --turquoise-light: #5fc9c3;
-    --turquoise-pale: #e6f7f6;
-    --ink: #1f3b3a;
-    --ink-soft: #4b6a68;
-    --paper: #fffefb;
-    --gold: #c9a86a;
+    --ink: #2b2a26;
+    --ink-soft: #746f64;
+    --gold: #ad8a44;
+    --gold-deep: #8c6c30;
+    --gold-light: #e6d3a3;
+    --paper: #fffdf9;
   }
   *{ box-sizing: border-box; }
   html,body{ margin:0; padding:0; }
   body{
+    position:relative;
     min-height:100vh;
-    font-family:'Cormorant Garamond', serif;
+    font-family:'EB Garamond', serif;
     color: var(--ink);
     background:
-      radial-gradient(1200px 600px at 50% -10%, var(--turquoise-pale), transparent 60%),
-      radial-gradient(1000px 500px at 50% 110%, var(--turquoise-pale), transparent 60%),
-      var(--paper);
+      radial-gradient(ellipse 520px 320px at 8% 15%, rgba(150,148,140,0.16), transparent 60%),
+      radial-gradient(ellipse 420px 260px at 95% 8%, rgba(160,155,140,0.14), transparent 55%),
+      radial-gradient(ellipse 600px 420px at 45% 95%, rgba(150,148,140,0.15), transparent 60%),
+      radial-gradient(ellipse 400px 300px at 100% 80%, rgba(160,155,140,0.12), transparent 55%),
+      linear-gradient(150deg, #f8f7f4 0%, #efede8 45%, #f9f8f5 100%);
     display:flex;
     align-items:center;
     justify-content:center;
-    padding: 32px 16px;
+    padding: 40px 16px;
+    overflow-x:hidden;
+  }
+
+  /* ---- orchid sprays, page corners ---- */
+  .spray{ position: fixed; width: 210px; height: 210px; pointer-events:none; z-index: 0; opacity: 0.9; }
+  .spray.tr{ top: -20px; right: -20px; }
+  .spray.bl{ bottom: -20px; left: -20px; transform: rotate(180deg); }
+  .spray svg{ width:100%; height:100%; display:block; }
+  @media (max-width: 560px){
+    .spray{ width: 130px; height: 130px; }
   }
 
   .card{
     position:relative;
+    z-index: 1;
     width:100%;
-    max-width:620px;
+    max-width: 500px;
     background: var(--paper);
-    border-radius: 6px;
-    padding: 60px 44px 50px;
     text-align:center;
-    box-shadow: 0 30px 70px -30px rgba(15,155,150,0.35), 0 2px 10px rgba(15,59,58,0.06);
-    overflow:hidden;
-  }
-  .card::before{
-    content:"";
-    position:absolute;
-    inset: 14px;
-    border: 1.5px solid var(--turquoise-light);
-    border-radius: 3px;
-    pointer-events:none;
-    z-index: 3;
-  }
-  .card::after{
-    content:"";
-    position:absolute;
-    inset: 20px;
-    border: 1px solid var(--turquoise-pale);
-    border-radius: 3px;
-    pointer-events:none;
-    z-index: 3;
+    padding: 54px 34px 46px;
+    box-shadow: 0 40px 90px -40px rgba(60,50,20,0.28), 0 2px 14px rgba(60,50,20,0.06);
   }
 
-  /* ---------- faint rose wallpaper, inside the card ---------- */
-  .bg-flowers{
-    position: absolute;
-    inset: 0;
-    z-index: 0;
-    pointer-events: none;
-    color: var(--turquoise-light);
-  }
-  .bg-flowers svg{ width:100%; height:100%; display:block; }
+  /* gold marble veins on the card */
+  .veins{ position:absolute; inset:0; z-index:0; pointer-events:none; overflow:hidden; }
+  .veins svg{ width:100%; height:100%; display:block; }
 
-  /* ---------- corner rose sprigs ---------- */
-  .sprig{ position:absolute; width:132px; height:132px; z-index: 2; pointer-events:none; color: var(--turquoise); }
-  .sprig svg{ width:100%; height:100%; display:block; }
-  .sprig.tl{ top:-8px; left:-14px; }
-  .sprig.br{ bottom:-8px; right:-14px; transform: rotate(180deg); }
-
-  .content{ position:relative; z-index:1; }
+  .inner{ position:relative; z-index:1; }
 
   .pretitle{
-    font-family:'Cinzel', serif;
-    font-size: 12px;
-    letter-spacing: 0.35em;
+    font-family:'EB Garamond', serif;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.38em;
     text-transform: uppercase;
-    color: var(--turquoise);
-    margin: 20px 0 30px;
+    color: var(--gold-deep);
+    margin: 4px 0 8px;
   }
 
   .names{
-    font-family:'Mrs Saint Delafield', cursive;
+    font-family:'Mynerve', cursive;
     font-weight:400;
-    font-size: clamp(50px, 11vw, 80px);
-    line-height: 1.3;
-    margin: 0;
+    font-size: clamp(46px, 11vw, 68px);
+    line-height: 1.15;
+    margin: 12px 0 0;
     color: var(--ink);
   }
   .names .amp{
-    display:block;
-    font-size: 0.48em;
-    color: var(--turquoise);
-    margin: 0px 0;
+    display:inline-block;
+    font-size: 0.5em;
+    color: var(--gold);
+    margin: 0 6px;
+    vertical-align: middle;
   }
 
   .fullnames{
-    font-family:'Cinzel', serif;
-    font-size: 11.5px;
-    letter-spacing: 0.14em;
+    font-family:'EB Garamond', serif;
+    font-size: 10.5px;
+    font-weight: 500;
+    letter-spacing: 0.16em;
     text-transform: uppercase;
     color: var(--ink-soft);
     margin: 10px 0 0;
   }
-  .fullnames .sep{ color: var(--turquoise-light); margin: 0 10px; }
+  .fullnames .sep{ color: var(--gold); margin: 0 12px; }
 
   .subtitle{
-    font-family:'Cormorant Garamond', serif;
+    font-family:'EB Garamond', serif;
+    font-weight: 300;
     font-style: italic;
-    font-size: 18px;
+    font-size: 17.5px;
     color: var(--ink-soft);
-    margin: 22px 0 28px;
-    letter-spacing: 0.02em;
+    margin: 24px 0 0;
   }
 
-  .divider{
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    gap: 14px;
-    margin: 0 auto 30px;
-    max-width: 320px;
+  .rule{
+    width: 1px;
+    height: 36px;
+    background: linear-gradient(var(--gold), var(--gold-light));
+    margin: 30px auto;
   }
-  .divider .line{ flex:1; height:1px; background: linear-gradient(90deg, transparent, var(--turquoise-light)); }
-  .divider .line.right{ background: linear-gradient(90deg, var(--turquoise-light), transparent); }
-  .divider .diamond{ width:8px; height:8px; background: var(--turquoise); transform: rotate(45deg); flex-shrink:0; }
 
-  .details{ margin-bottom: 8px; }
-  .detail-row{ margin-bottom: 18px; }
+  .detail-row{ margin-bottom: 28px; }
+  .detail-row:last-child{ margin-bottom: 0; }
   .detail-label{
-    font-family:'Cinzel', serif;
-    font-size: 11px;
-    letter-spacing: 0.25em;
+    font-family:'EB Garamond', serif;
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.3em;
     text-transform: uppercase;
-    color: var(--turquoise);
-    margin: 0 0 6px;
+    color: var(--gold-deep);
+    margin: 0 0 8px;
   }
   .detail-value{
-    font-size: 27px;
+    font-size: 24px;
+    font-weight: 400;
     margin: 0;
     color: var(--ink);
-    font-weight: 500;
   }
   .detail-sub{
-    font-size: 17px;
+    font-size: 15.5px;
+    font-weight: 300;
     color: var(--ink-soft);
-    margin: 2px 0 0;
+    margin: 3px 0 0;
   }
 
   .venue-row{
     display:flex;
-    align-items:center;
+    align-items:flex-start;
     justify-content:center;
-    gap: 20px;
-    margin-top: 28px;
+    gap: 48px;
   }
-  .venue-center{ flex-shrink:0; }
-  .koumbaros{ flex: 1; min-width: 0; }
+  .koumbaros{ flex: 0 1 auto; min-width: 0; }
   .kb-label{
-    font-family:'Cinzel', serif;
-    font-size: 10px;
+    font-family:'EB Garamond', serif;
+    font-size: 9.5px;
+    font-weight: 500;
     letter-spacing: 0.2em;
     text-transform: uppercase;
-    color: var(--turquoise-light);
-    margin: 0 0 4px;
+    color: var(--gold);
+    margin: 0 0 5px;
   }
   .kb-name{
-    font-size: 17px;
-    line-height: 1.25;
+    font-size: 15.5px;
+    font-weight: 300;
+    line-height: 1.3;
     color: var(--ink-soft);
     margin: 0;
   }
 
   .countdown{
-    display:flex;
-    justify-content:center;
-    gap: 14px;
-    margin: 32px 0 32px;
-    flex-wrap: wrap;
-  }
-  .cd-box{
-    background: var(--turquoise-pale);
-    border: 1px solid var(--turquoise-light);
-    border-radius: 8px;
-    padding: 10px 14px;
-    min-width: 62px;
-  }
-  .cd-num{
-    font-family:'Cinzel', serif;
-    font-size: 22px;
-    font-weight: 600;
-    color: var(--turquoise);
-    line-height:1;
-  }
-  .cd-label{
-    font-size: 11px;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
+    font-size: 15.5px;
+    font-weight: 300;
     color: var(--ink-soft);
-    margin-top: 4px;
+  }
+  .countdown b{
+    font-family:'EB Garamond', serif;
+    font-weight: 600;
+    font-size: 14.5px;
+    color: var(--gold-deep);
+    margin: 0 3px;
   }
 
   .cta{
     display:inline-block;
-    font-family:'Cinzel', serif;
-    font-size: 13px;
-    letter-spacing: 0.15em;
+    font-family:'EB Garamond', serif;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.2em;
     text-transform: uppercase;
-    color: #fff;
-    background: var(--turquoise);
-    padding: 14px 28px;
-    border-radius: 999px;
+    color: var(--gold-deep);
+    background: transparent;
+    border: 1px solid var(--gold);
+    padding: 13px 30px;
     text-decoration: none;
-    box-shadow: 0 10px 24px -8px rgba(15,155,150,0.55);
-    transition: transform 0.15s ease, box-shadow 0.15s ease;
+    transition: background 0.15s ease, color 0.15s ease;
   }
-  .cta:hover{ transform: translateY(-2px); box-shadow: 0 14px 28px -8px rgba(15,155,150,0.6); }
+  .cta:hover{ background: var(--gold); color: #fff; }
 
   .closing{
-    margin-top: 36px;
+    margin-top: 38px;
+    font-weight: 300;
     font-style: italic;
-    font-size: 17px;
+    font-size: 16.5px;
     color: var(--ink-soft);
   }
   .signature{
-    margin-top: 8px;
-    font-family:'Mrs Saint Delafield', cursive;
-    font-size: 32px;
-    color: var(--turquoise);
+    margin-top: 6px;
+    font-family:'Mynerve', cursive;
+    font-size: 27px;
+    color: var(--gold-deep);
   }
 
-  @media (max-width: 480px){
-    .card{ padding: 52px 24px 40px; }
-    .detail-value{ font-size: 23px; }
-    .cd-box{ min-width: 54px; padding: 8px 10px; }
-    .sprig{ width: 96px; height: 96px; }
+  @media (max-width: 420px){
+    .card{ padding: 46px 22px 38px; }
     .venue-row{ gap: 8px; }
-    .kb-name{ font-size: 14px; }
-    .kb-label{ font-size: 9px; letter-spacing: 0.12em; }
+    .kb-name{ font-size: 13.5px; }
+    .detail-value{ font-size: 21px; }
   }
 </style>
 </head>
 <body>
-  <div class="card">
 
-    <!-- faint rose wallpaper -->
-    <div class="bg-flowers" aria-hidden="true">
-      <svg viewBox="0 0 620 900" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+  <div class="spray tr" aria-hidden="true">
+    <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <symbol id="orchid" viewBox="-50 -50 100 100">
+          <path d="M0 0 C -8 -8 -10 -20 0 -30 C 10 -20 8 -8 0 0 Z" fill="currentColor" opacity="0.55"/>
+          <path d="M0 0 C -12 -4 -22 -2 -30 8 C -20 12 -8 8 0 0 Z" fill="currentColor" opacity="0.55"/>
+          <path d="M0 0 C 12 -4 22 -2 30 8 C 20 12 8 8 0 0 Z" fill="currentColor" opacity="0.55"/>
+          <path d="M0 0 C -6 8 -14 14 -20 26 C -8 24 -2 16 0 0 Z" fill="currentColor" opacity="0.7"/>
+          <path d="M0 0 C 6 8 14 14 20 26 C 8 24 2 16 0 0 Z" fill="currentColor" opacity="0.7"/>
+          <path d="M0 2 C -6 8 -8 18 0 26 C 8 18 6 8 0 2 Z" fill="currentColor" opacity="0.95"/>
+          <circle cx="0" cy="0" r="2.4" fill="currentColor"/>
+        </symbol>
+      </defs>
+      <g stroke="#8c6c30" stroke-width="1.1" fill="none" opacity="0.75">
+        <path d="M198 20 C 150 45 120 70 95 110 C 78 138 70 165 55 198"/>
+        <path d="M198 55 C 165 68 140 85 118 112"/>
+        <path d="M180 8 C 155 30 138 42 118 60"/>
+      </g>
+      <g opacity="0.8">
+        <path d="M118 112 C 108 118 100 128 98 140 C 108 138 116 130 118 112 Z" fill="#b3ab8e" opacity="0.55"/>
+        <path d="M95 110 C 86 118 80 130 82 144 C 92 140 98 128 95 110 Z" fill="#b3ab8e" opacity="0.5"/>
+        <path d="M55 198 C 46 188 40 176 44 162 C 54 168 58 182 55 198 Z" fill="#b3ab8e" opacity="0.5"/>
+      </g>
+      <g color="#d8d2c2">
+        <use href="#orchid" x="180" y="18" width="56" height="56"/>
+        <use href="#orchid" x="150" y="42" width="46" height="46" transform="rotate(18 150 42)"/>
+        <use href="#orchid" x="118" y="70" width="50" height="50" transform="rotate(-14 118 70)"/>
+        <use href="#orchid" x="90"  y="108" width="42" height="42" transform="rotate(24 90 108)"/>
+        <use href="#orchid" x="60"  y="150" width="46" height="46" transform="rotate(-20 60 150)"/>
+        <use href="#orchid" x="42"  y="180" width="34" height="34" transform="rotate(10 42 180)"/>
+      </g>
+    </svg>
+  </div>
+
+  <div class="spray bl" aria-hidden="true">
+    <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+      <g stroke="#8c6c30" stroke-width="1.1" fill="none" opacity="0.75">
+        <path d="M198 20 C 150 45 120 70 95 110 C 78 138 70 165 55 198"/>
+        <path d="M198 55 C 165 68 140 85 118 112"/>
+        <path d="M180 8 C 155 30 138 42 118 60"/>
+      </g>
+      <g opacity="0.8">
+        <path d="M118 112 C 108 118 100 128 98 140 C 108 138 116 130 118 112 Z" fill="#b3ab8e" opacity="0.55"/>
+        <path d="M95 110 C 86 118 80 130 82 144 C 92 140 98 128 95 110 Z" fill="#b3ab8e" opacity="0.5"/>
+        <path d="M55 198 C 46 188 40 176 44 162 C 54 168 58 182 55 198 Z" fill="#b3ab8e" opacity="0.5"/>
+      </g>
+      <g color="#d8d2c2">
+        <use href="#orchid" x="180" y="18" width="56" height="56"/>
+        <use href="#orchid" x="150" y="42" width="46" height="46" transform="rotate(18 150 42)"/>
+        <use href="#orchid" x="118" y="70" width="50" height="50" transform="rotate(-14 118 70)"/>
+        <use href="#orchid" x="90"  y="108" width="42" height="42" transform="rotate(24 90 108)"/>
+        <use href="#orchid" x="60"  y="150" width="46" height="46" transform="rotate(-20 60 150)"/>
+        <use href="#orchid" x="42"  y="180" width="34" height="34" transform="rotate(10 42 180)"/>
+      </g>
+    </svg>
+  </div>
+
+  <div class="card">
+    <div class="veins" aria-hidden="true">
+      <svg viewBox="0 0 500 640" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
         <defs>
-          <symbol id="rose" viewBox="0 0 100 100">
-            <path d="M50 60 C 49 74 51 87 50 98" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-            <path d="M50 78 C 42 76 36 80 34 88 C 43 88 49 84 50 78 Z" fill="currentColor" opacity="0.55"/>
-            <path d="M50 86 C 58 84 64 88 66 96 C 57 96 51 92 50 86 Z" fill="currentColor" opacity="0.55"/>
-            <g opacity="0.42">
-              <path d="M50 56 C 39 52 32 40 38 26 C 42 16 58 16 62 26 C 68 40 61 52 50 56 Z"/>
-              <path d="M50 56 C 39 52 32 40 38 26 C 42 16 58 16 62 26 C 68 40 61 52 50 56 Z" transform="rotate(72 50 50)"/>
-              <path d="M50 56 C 39 52 32 40 38 26 C 42 16 58 16 62 26 C 68 40 61 52 50 56 Z" transform="rotate(144 50 50)"/>
-              <path d="M50 56 C 39 52 32 40 38 26 C 42 16 58 16 62 26 C 68 40 61 52 50 56 Z" transform="rotate(216 50 50)"/>
-              <path d="M50 56 C 39 52 32 40 38 26 C 42 16 58 16 62 26 C 68 40 61 52 50 56 Z" transform="rotate(288 50 50)"/>
-            </g>
-            <g opacity="0.68">
-              <path d="M50 55 C 42 52 38 44 42 34 C 45 27 55 27 58 34 C 62 44 58 52 50 55 Z" transform="rotate(36 50 50)"/>
-              <path d="M50 55 C 42 52 38 44 42 34 C 45 27 55 27 58 34 C 62 44 58 52 50 55 Z" transform="rotate(108 50 50)"/>
-              <path d="M50 55 C 42 52 38 44 42 34 C 45 27 55 27 58 34 C 62 44 58 52 50 55 Z" transform="rotate(180 50 50)"/>
-              <path d="M50 55 C 42 52 38 44 42 34 C 45 27 55 27 58 34 C 62 44 58 52 50 55 Z" transform="rotate(252 50 50)"/>
-              <path d="M50 55 C 42 52 38 44 42 34 C 45 27 55 27 58 34 C 62 44 58 52 50 55 Z" transform="rotate(324 50 50)"/>
-            </g>
-            <path d="M50 50 C 46 47 45 42 48 39 C 52 36 57 38 57 43 C 57 48 52 51 47 49 C 43 47 43 42 47 40" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" opacity="0.95"/>
-          </symbol>
+          <linearGradient id="veinGold" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#e6d3a3"/>
+            <stop offset="50%" stop-color="#ad8a44"/>
+            <stop offset="100%" stop-color="#e6d3a3"/>
+          </linearGradient>
         </defs>
-        <use href="#rose" x="10"  y="0"   width="140" height="140" opacity="0.10" transform="rotate(10 80 70)"/>
-        <use href="#rose" x="450" y="10"  width="170" height="170" opacity="0.09" transform="rotate(-12 535 95)"/>
-        <use href="#rose" x="230" y="110" width="100" height="100" opacity="0.07" transform="rotate(30 280 160)"/>
-        <use href="#rose" x="-30" y="250" width="140" height="140" opacity="0.09" transform="rotate(-8 40 320)"/>
-        <use href="#rose" x="480" y="260" width="130" height="130" opacity="0.08" transform="rotate(15 545 325)"/>
-        <use href="#rose" x="90"  y="400" width="110" height="110" opacity="0.06" transform="rotate(-22 145 455)"/>
-        <use href="#rose" x="410" y="440" width="160" height="160" opacity="0.08" transform="rotate(20 490 520)"/>
-        <use href="#rose" x="0"   y="580" width="130" height="130" opacity="0.08" transform="rotate(-14 65 645)"/>
-        <use href="#rose" x="360" y="610" width="100" height="100" opacity="0.06" transform="rotate(25 410 660)"/>
-        <use href="#rose" x="170" y="680" width="150" height="150" opacity="0.09" transform="rotate(-16 245 755)"/>
-        <use href="#rose" x="480" y="720" width="120" height="120" opacity="0.08" transform="rotate(12 540 780)"/>
-        <use href="#rose" x="30"  y="770" width="110" height="110" opacity="0.07" transform="rotate(-30 85 825)"/>
+        <g fill="none" stroke="url(#veinGold)" opacity="0.5">
+          <path d="M-20 40 C 80 20 140 60 220 30 C 300 5 360 40 520 10" stroke-width="1.4"/>
+          <path d="M-20 70 C 60 55 120 85 200 60" stroke-width="0.8"/>
+          <path d="M520 600 C 420 615 360 585 280 605 C 200 625 140 600 -20 615" stroke-width="1.4"/>
+          <path d="M520 570 C 440 585 390 560 320 578" stroke-width="0.8"/>
+        </g>
       </svg>
     </div>
 
-    <!-- corner rose sprigs -->
-    <div class="sprig tl">
-      <svg viewBox="0 0 100 100"><use href="#rose-sprig"/></svg>
-    </div>
-    <div class="sprig br">
-      <svg viewBox="0 0 100 100"><use href="#rose-sprig"/></svg>
-    </div>
-
-    <!-- shared defs for the sprig (rendered once, invisible) -->
-    <svg width="0" height="0" style="position:absolute">
-      <defs>
-        <symbol id="rose-sprig" viewBox="0 0 100 100">
-          <path d="M8 92 C 30 78 42 62 46 44" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" opacity="0.7"/>
-          <path d="M24 78 C 16 76 10 79 7 86 C 15 87 21 84 24 78 Z" fill="currentColor" opacity="0.5"/>
-          <path d="M34 66 C 27 62 20 63 15 69 C 22 72 29 71 34 66 Z" fill="currentColor" opacity="0.5"/>
-          <g transform="translate(46 30) scale(0.42)">
-            <g opacity="0.55">
-              <path d="M50 56 C 39 52 32 40 38 26 C 42 16 58 16 62 26 C 68 40 61 52 50 56 Z"/>
-              <path d="M50 56 C 39 52 32 40 38 26 C 42 16 58 16 62 26 C 68 40 61 52 50 56 Z" transform="rotate(72 50 50)"/>
-              <path d="M50 56 C 39 52 32 40 38 26 C 42 16 58 16 62 26 C 68 40 61 52 50 56 Z" transform="rotate(144 50 50)"/>
-              <path d="M50 56 C 39 52 32 40 38 26 C 42 16 58 16 62 26 C 68 40 61 52 50 56 Z" transform="rotate(216 50 50)"/>
-              <path d="M50 56 C 39 52 32 40 38 26 C 42 16 58 16 62 26 C 68 40 61 52 50 56 Z" transform="rotate(288 50 50)"/>
-            </g>
-            <g opacity="0.85">
-              <path d="M50 55 C 42 52 38 44 42 34 C 45 27 55 27 58 34 C 62 44 58 52 50 55 Z" transform="rotate(36 50 50)"/>
-              <path d="M50 55 C 42 52 38 44 42 34 C 45 27 55 27 58 34 C 62 44 58 52 50 55 Z" transform="rotate(108 50 50)"/>
-              <path d="M50 55 C 42 52 38 44 42 34 C 45 27 55 27 58 34 C 62 44 58 52 50 55 Z" transform="rotate(180 50 50)"/>
-              <path d="M50 55 C 42 52 38 44 42 34 C 45 27 55 27 58 34 C 62 44 58 52 50 55 Z" transform="rotate(252 50 50)"/>
-              <path d="M50 55 C 42 52 38 44 42 34 C 45 27 55 27 58 34 C 62 44 58 52 50 55 Z" transform="rotate(324 50 50)"/>
-            </g>
-            <path d="M50 50 C 46 47 45 42 48 39 C 52 36 57 38 57 43 C 57 48 52 51 47 49 C 43 47 43 42 47 40" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/>
-          </g>
-          <path d="M12 84 C 10 88 9 92 10 96" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" opacity="0.6"/>
-        </symbol>
-      </defs>
-    </svg>
-
-    <div class="content">
+    <div class="inner">
       <p class="pretitle">Σας προσκαλούμε στο γάμο μας</p>
 
       <h1 class="names">Ιωσήφ<span class="amp">&amp;</span>Ναταλία</h1>
-      <p class="fullnames">Χριστιανάκης<span class="sep">&#10022;</span>Παπαζαχαρίου</p>
+      <p class="fullnames">Χριστιανάκης<span class="sep">&#183;</span>Παπαζαχαρίου</p>
 
       <p class="subtitle">αποφασίσαμε να γράψουμε μαζί την πιο όμορφη ιστορία</p>
 
-      <div class="divider">
-        <span class="line"></span><span class="diamond"></span><span class="line right"></span>
+      <div class="rule"></div>
+
+      <div class="detail-row">
+        <p class="detail-label">Ημερομηνία</p>
+        <p class="detail-value" id="event-date">Σάββατο, 10 Ιουλίου 2027</p>
+        <p class="detail-sub">ώρα τελετής 19:00</p>
       </div>
 
-      <div class="details">
-        <div class="detail-row">
-          <p class="detail-label">Ημερομηνία</p>
-          <p class="detail-value" id="event-date">Παρασκευή, 10 Ιουλίου 2026</p>
-          <p class="detail-sub">ώρα τελετής 19:00</p>
-        </div>
+      <div class="detail-row">
+        <p class="detail-label">Τοποθεσία</p>
+        <p class="detail-value">Κτήμα Κλεοπάτρα</p>
+      </div>
 
-        <div class="venue-row">
-          <div class="koumbaros">
-            <p class="kb-label">Κουμπάρα</p>
-            <p class="kb-name">Κάτια<br>Τουρκομάνη</p>
-          </div>
-          <div class="venue-center">
-            <p class="detail-label">Τοποθεσία</p>
-            <p class="detail-value">Κτήμα Κλεοπάτρα</p>
-          </div>
-          <div class="koumbaros">
-            <p class="kb-label">Κουμπάρος</p>
-            <p class="kb-name">Μάνος<br>Γιαννουσάκης</p>
-          </div>
+      <div class="detail-row venue-row">
+        <div class="koumbaros">
+          <p class="kb-label">Κουμπάρα</p>
+          <p class="kb-name">Κάτια Τουρκομάνη</p>
+        </div>
+        <div class="koumbaros">
+          <p class="kb-label">Κουμπάρος</p>
+          <p class="kb-name">Μάνος Γιαννουσάκης</p>
         </div>
       </div>
 
-      <div class="countdown" id="countdown"></div>
+      <div class="detail-row">
+        <p class="countdown" id="countdown"></p>
+      </div>
 
-      <a class="cta" id="calendar-link" href="#" target="_blank" rel="noopener">Προσθήκη στο ημερολόγιο</a>
+      <div class="detail-row">
+        <a class="cta" id="calendar-link" href="#" target="_blank" rel="noopener">Προσθήκη στο ημερολόγιο</a>
+      </div>
 
       <p class="closing">Η παρουσία σας θα είναι για εμάς η μεγαλύτερη χαρά</p>
       <p class="signature">Σας περιμένουμε&nbsp;&hearts;</p>
@@ -377,36 +338,25 @@
   </div>
 
 <script>
-  // --- Ημερομηνία γάμου: 10 Ιουλίου 2026, 19:00 (Ελλάδα) ---
-  const weddingDate = new Date('2026-07-10T19:00:00+03:00');
+  // --- Ημερομηνία γάμου: 10 Ιουλίου 2027, 19:00 (Ελλάδα) ---
+  const weddingDate = new Date('2027-07-10T19:00:00+03:00');
 
-  // --- Countdown ---
+  // --- Countdown (μία λιτή γραμμή κειμένου) ---
   const countdownEl = document.getElementById('countdown');
-  const units = [
-    { label: 'Ημέρες', ms: 1000 * 60 * 60 * 24 },
-    { label: 'Ώρες', ms: 1000 * 60 * 60 },
-    { label: 'Λεπτά', ms: 1000 * 60 },
-    { label: 'Δεύτ.', ms: 1000 }
-  ];
-
   function renderCountdown() {
     let diff = weddingDate.getTime() - Date.now();
     if (diff < 0) {
-      countdownEl.innerHTML = '<p style="font-family:Cormorant Garamond, serif; font-size:18px; color:#4b6a68;">Ο γάμος μας ήδη γιορτάστηκε! 💍</p>';
+      countdownEl.innerHTML = 'Ο γάμος μας ήδη γιορτάστηκε! 💍';
       return;
     }
-    let remaining = diff;
-    const values = units.map((u) => {
-      const val = Math.floor(remaining / u.ms);
-      remaining -= val * u.ms;
-      return val;
-    });
-    countdownEl.innerHTML = units.map((u, i) =>
-      `<div class="cd-box"><div class="cd-num">${values[i]}</div><div class="cd-label">${u.label}</div></div>`
-    ).join('');
+    const days = Math.floor(diff / 86400000);
+    const hours = Math.floor((diff % 86400000) / 3600000);
+    const mins = Math.floor((diff % 3600000) / 60000);
+    countdownEl.innerHTML =
+      `<b>${days}</b> ημέρες &nbsp;·&nbsp; <b>${hours}</b> ώρες &nbsp;·&nbsp; <b>${mins}</b> λεπτά`;
   }
   renderCountdown();
-  setInterval(renderCountdown, 1000);
+  setInterval(renderCountdown, 1000 * 30);
 
   // --- Google Calendar link ---
   function toGCalDate(d) {
