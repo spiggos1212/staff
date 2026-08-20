@@ -422,6 +422,17 @@
 
     render(state);
 
+    // Τραβάμε τα τρέχοντα στοιχεία από το backend (επεξεργάσιμα από /rsvps/invitation).
+    // Αν αποτύχει, μένουν οι παραπάνω τιμές ως fallback.
+    fetch('/api/invitation').then(function (res) {
+      return res.ok ? res.json() : null;
+    }).then(function (data) {
+      if (data && data.ok && data.invitation) {
+        Object.assign(state, data.invitation);
+        render(state);
+      }
+    }).catch(function () {});
+
     // ===== RSVP =====
     (function initRsvp() {
       var form = document.getElementById('rsvp-form');

@@ -34,7 +34,9 @@ export async function onRequestGet(context) {
 <style>
   body{ font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif; background:#faf9f5; color:#2b2a26; margin:0; padding:32px 20px; }
   h1{ font-size:20px; margin:0 0 4px; }
-  .stats{ color:#746f64; font-size:14px; margin-bottom:20px; }
+  .stats{ color:#746f64; font-size:14px; margin-bottom:8px; }
+  .top-link{ display:inline-block; font-size:13px; color:#8c6c30; text-decoration:none; margin-bottom:20px; }
+  .top-link:hover{ text-decoration:underline; }
   table{ border-collapse:collapse; width:100%; max-width:900px; background:#fff; box-shadow:0 1px 4px rgba(0,0,0,0.08); }
   th, td{ text-align:left; padding:9px 12px; border-bottom:1px solid #eee; font-size:14px; }
   th{ background:#f3f1ec; font-weight:600; }
@@ -49,6 +51,7 @@ export async function onRequestGet(context) {
 <body>
   <h1>Δηλώσεις συμμετοχής</h1>
   <p class="stats">${results.length} απαντήσεις &middot; ${totalYes} έρχονται (${totalGuests} άτομα) &middot; ${totalNo} δεν έρχονται</p>
+  <a class="top-link" href="/rsvps/invitation">&#9998; Επεξεργασία στοιχείων πρόσκλησης (ονόματα, ημερομηνία, κτήμα...)</a>
   ${
     results.length
       ? `<table>
