@@ -2,6 +2,8 @@
 // POST /rsvps/edit/:id — αποθηκεύει τις αλλαγές και επιστρέφει στη λίστα.
 // Προστατεύεται από το ίδιο Basic Auth με το /rsvps (βλ. ../_middleware.js).
 
+import { escapeHtml } from '../../_utils.js';
+
 export async function onRequestGet(context) {
   const { env, params } = context;
   const id = Number.parseInt(params.id, 10);
@@ -112,8 +114,4 @@ function renderForm(row, error) {
   </div>
 </body>
 </html>`;
-}
-
-function escapeHtml(s) {
-  return String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 }

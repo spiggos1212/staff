@@ -2,6 +2,8 @@
 // POST /rsvps/invitation — αποθηκεύει τις αλλαγές (μονή γραμμή, id = 1).
 // Προστατεύεται από το ίδιο Basic Auth με το /rsvps (βλ. _middleware.js).
 
+import { escapeHtml } from '../_utils.js';
+
 export async function onRequestGet(context) {
   const { env } = context;
   const row = await env.DB.prepare(
@@ -158,8 +160,4 @@ function renderForm(f, error, success) {
   </div>
 </body>
 </html>`;
-}
-
-function escapeHtml(s) {
-  return String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 }

@@ -6,7 +6,7 @@
 <title>Ιωσήφ &amp; Ναταλία</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Mynerve&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Cardo:ital@0;1&family=Alegreya:ital,wght@0,400;0,500;1,400;1,500&family=GFS+Didot&family=Gentium+Plus:ital@0;1&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Mynerve&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet">
 <style>
   :root{
     --ink: #2b2a26;
@@ -20,31 +20,6 @@
     --font-names-tracking: -0.06em;
     --font-body: 'EB Garamond', serif;
   }
-  :root[data-style="classic"]{
-    --font-names: 'Cardo', serif;
-    --font-names-style: italic;
-    --font-names-tracking: normal;
-    --font-body: 'EB Garamond', serif;
-  }
-  :root[data-style="romantic"]{
-    --font-names: 'Alegreya', serif;
-    --font-names-style: italic;
-    --font-names-tracking: normal;
-    --font-body: 'Alegreya', serif;
-  }
-  :root[data-style="editorial"]{
-    --font-names: 'GFS Didot', serif;
-    --font-names-style: normal;
-    --font-names-tracking: 0.01em;
-    --font-body: 'EB Garamond', serif;
-  }
-  :root[data-style="soft"]{
-    --font-names: 'Gentium Plus', serif;
-    --font-names-style: italic;
-    --font-names-tracking: normal;
-    --font-body: 'Gentium Plus', serif;
-  }
-
   *{ box-sizing: border-box; }
   html,body{ margin:0; padding:0; }
   body{
@@ -96,6 +71,9 @@
     color: var(--gold-deep);
     margin: 4px 0 8px;
   }
+
+  .weather{ display:none; font-family: var(--font-body); font-size: 12px; font-weight: 300; color: var(--ink-soft); letter-spacing: 0.02em; margin: 0 0 8px; }
+  .weather.show{ display:block; }
 
   .names{
     font-family: var(--font-names);
@@ -269,6 +247,7 @@
 
     <div class="inner">
       <p class="pretitle">Σας προσκαλούμε στο γάμο μας</p>
+      <p class="weather" id="weather"></p>
 
       <h1 class="names"><span id="groom-name"></span><span class="amp">&amp;</span><span id="bride-name"></span></h1>
       <p class="fullnames"><span id="groom-surname"></span><span class="sep">&#183;</span><span id="bride-surname"></span></p>
@@ -430,6 +409,18 @@
       if (data && data.ok && data.invitation) {
         Object.assign(state, data.invitation);
         render(state);
+      }
+    }).catch(function () {});
+
+    // Τρέχων καιρός Αθήνας — διακριτικό στοιχείο, αν αποτύχει απλά μένει κρυφό.
+    fetch('/api/weather').then(function (res) {
+      return res.ok ? res.json() : null;
+    }).then(function (data) {
+      if (data && data.ok && data.weather) {
+        var w = data.weather;
+        var el = document.getElementById('weather');
+        el.textContent = (w.icon ? w.icon + ' ' : '') + 'Αθήνα ' + w.temp + '°C · ' + w.description;
+        el.classList.add('show');
       }
     }).catch(function () {});
 

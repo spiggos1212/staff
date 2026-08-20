@@ -1,5 +1,7 @@
 // GET /rsvps — λίστα δηλώσεων συμμετοχής (πίσω από Basic Auth, βλ. _middleware.js).
 
+import { escapeHtml } from '../_utils.js';
+
 export async function onRequestGet(context) {
   const { env } = context;
 
@@ -64,8 +66,4 @@ export async function onRequestGet(context) {
 </html>`;
 
   return new Response(html, { headers: { 'content-type': 'text/html; charset=utf-8' } });
-}
-
-function escapeHtml(s) {
-  return String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 }
