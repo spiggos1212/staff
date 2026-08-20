@@ -4,7 +4,7 @@ export async function onRequestGet(context) {
   const { env } = context;
 
   const { results } = await env.DB.prepare(
-    'SELECT name, attending, guest_count, comment, created_at FROM rsvps ORDER BY created_at DESC'
+    'SELECT id, name, attending, guest_count, comment, created_at FROM rsvps ORDER BY created_at DESC'
   ).all();
 
   const totalYes = results.filter((r) => r.attending).length;
@@ -20,6 +20,7 @@ export async function onRequestGet(context) {
           <td>${r.attending ? r.guest_count : '—'}</td>
           <td>${escapeHtml(r.comment || '')}</td>
           <td class="ts">${escapeHtml(r.created_at)}</td>
+          <td><a class="edit" href="/rsvps/edit/${r.id}">Επεξεργασία</a></td>
         </tr>`
     )
     .join('');
@@ -40,6 +41,8 @@ export async function onRequestGet(context) {
   td.yes{ color:#3a7d44; font-weight:600; }
   td.no{ color:#b23b3b; }
   td.ts{ color:#999; font-size:12px; white-space:nowrap; }
+  a.edit{ color:#8c6c30; font-size:13px; text-decoration:none; white-space:nowrap; }
+  a.edit:hover{ text-decoration:underline; }
   .empty{ color:#999; padding:20px 0; }
 </style>
 </head>
@@ -49,7 +52,7 @@ export async function onRequestGet(context) {
   ${
     results.length
       ? `<table>
-    <thead><tr><th>Όνομα</th><th>Έρχεται</th><th>Άτομα</th><th>Σχόλιο</th><th>Ημερομηνία</th></tr></thead>
+    <thead><tr><th>Όνομα</th><th>Έρχεται</th><th>Άτομα</th><th>Σχόλιο</th><th>Ημερομηνία</th><th></th></tr></thead>
     <tbody>${rows}</tbody>
   </table>`
       : '<p class="empty">Δεν υπάρχουν ακόμα απαντήσεις.</p>'
