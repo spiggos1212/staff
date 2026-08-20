@@ -166,32 +166,27 @@
     .detail-value{ font-size: 21px; }
   }
 
-  /* ===== Επεξεργασία: ξεχωριστός σύνδεσμος ?edit, κοινόχρηστη μέσω artifact.publish() ===== */
-  .editor-panel{ position: fixed; inset: 0; z-index: 30; background: rgba(30,26,18,0.45); display: none; align-items: center; justify-content: center; padding: 20px; font-family: 'EB Garamond', serif; }
-  .editor-panel.open{ display:flex; }
-  .editor-box{ background: #fffefc; width: 100%; max-width: 420px; max-height: 88vh; overflow-y: auto; border-radius: 8px; padding: 24px 24px 28px; box-shadow: 0 30px 80px -20px rgba(0,0,0,0.4); }
-  .editor-head{ display:flex; align-items:center; justify-content:space-between; margin-bottom: 16px; }
-  .editor-head h2{ font-size: 15px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--gold-deep); margin: 0; }
-  .editor-x{ background:none; border:none; font-size: 20px; line-height:1; color: var(--ink-soft); cursor:pointer; padding: 2px 6px; }
-
-  .editor-field{ margin-bottom: 14px; }
-  .editor-field label{ display:block; font-size: 12px; color: var(--ink-soft); margin-bottom: 4px; }
-  .editor-field input{ width: 100%; padding: 8px 10px; border: 1px solid #d8d2c2; border-radius: 5px; font-family: inherit; font-size: 15px; color: var(--ink); background: #fff; }
-  .editor-field input:disabled{ background:#f3f1ec; color:#9a9488; }
-  .editor-row2{ display:flex; gap: 10px; }
-  .editor-row2 > div{ flex:1; }
-
-  .style-grid{ display:grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin: 6px 0 20px; }
-  .style-swatch{ border: 1px solid #d8d2c2; border-radius: 6px; padding: 10px 8px; text-align: center; cursor: pointer; background: #fff; font-size: 20px; color: var(--ink); }
-  .style-swatch span{ display:block; font-family: 'EB Garamond', serif; font-size: 10px; letter-spacing: 0.05em; color: var(--ink-soft); margin-top: 4px; }
-  .style-swatch.active{ border-color: var(--gold); background: #fbf4e4; }
-
-  .editor-actions{ display:flex; gap: 10px; margin-top: 20px; }
-  .editor-actions button{ flex:1; font-family: inherit; font-size: 13px; letter-spacing: 0.05em; padding: 11px; border-radius: 6px; cursor: pointer; border: 1px solid var(--gold); background: var(--gold); color: #fff; }
-  .editor-actions button.secondary{ background: transparent; color: var(--gold-deep); }
-  .editor-actions button:disabled{ opacity: 0.55; cursor: default; }
-
-  #editor-status{ font-size: 12.5px; color: var(--ink-soft); margin: 12px 2px 0; min-height: 1.4em; }
+  /* ===== RSVP ===== */
+  .rsvp{ margin-top: 40px; padding-top: 34px; border-top: 1px solid #ece7da; text-align: left; }
+  .rsvp-title{ font-family: var(--font-body); font-size: 10px; font-weight: 500; letter-spacing: 0.3em; text-transform: uppercase; color: var(--gold-deep); margin: 0 0 16px; text-align: center; }
+  .rsvp-field{ margin-bottom: 14px; }
+  .rsvp-field label{ display:block; font-size: 12px; color: var(--ink-soft); margin-bottom: 4px; }
+  .rsvp-field input, .rsvp-field textarea{ width: 100%; padding: 9px 11px; border: 1px solid #d8d2c2; border-radius: 5px; font-family: var(--font-body); font-size: 15px; color: var(--ink); background: #fff; }
+  .rsvp-field textarea{ resize: vertical; min-height: 60px; }
+  .rsvp-toggle{ display:flex; gap: 8px; }
+  .rsvp-toggle button{ flex:1; font-family: var(--font-body); font-size: 14px; padding: 10px; border-radius: 5px; border: 1px solid #d8d2c2; background: #fff; color: var(--ink-soft); cursor: pointer; }
+  .rsvp-toggle button.active{ border-color: var(--gold); background: #fbf4e4; color: var(--gold-deep); font-weight: 600; }
+  .rsvp-guests{ display: none; }
+  .rsvp-guests.show{ display: block; }
+  .rsvp-hp{ position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+  .rsvp-submit{ width: 100%; font-family: var(--font-body); font-size: 12px; font-weight: 500; letter-spacing: 0.15em; text-transform: uppercase; color: #fff; background: var(--gold-deep); border: none; border-radius: 5px; padding: 13px; cursor: pointer; margin-top: 4px; }
+  .rsvp-submit:disabled{ opacity: 0.55; cursor: default; }
+  .rsvp-msg{ font-size: 13px; margin-top: 10px; min-height: 1.4em; text-align: center; }
+  .rsvp-msg.error{ color: #b23b3b; }
+  .rsvp-msg.ok{ color: #3a7d44; }
+  .rsvp-done{ display:none; text-align: center; padding: 10px 0; }
+  .rsvp-done.show{ display:block; }
+  .rsvp-form.hide{ display:none; }
 </style>
 </head>
 <body>
@@ -314,69 +309,61 @@
 
       <p class="closing">Η παρουσία σας θα είναι για εμάς η μεγαλύτερη χαρά</p>
       <p class="signature">Σας περιμένουμε&nbsp;&hearts;</p>
+
+      <div class="rsvp">
+        <p class="rsvp-title">Δήλωση συμμετοχής</p>
+
+        <form class="rsvp-form" id="rsvp-form">
+          <div class="rsvp-field">
+            <label for="rsvp-name">Ονοματεπώνυμο</label>
+            <input type="text" id="rsvp-name" name="name" required maxlength="120" autocomplete="name">
+          </div>
+
+          <div class="rsvp-field">
+            <label>Θα είστε μαζί μας;</label>
+            <div class="rsvp-toggle">
+              <button type="button" id="rsvp-yes" data-attending="yes">Ναι, θα έρθω</button>
+              <button type="button" id="rsvp-no" data-attending="no">Δεν θα μπορέσω</button>
+            </div>
+          </div>
+
+          <div class="rsvp-field rsvp-guests" id="rsvp-guests-field">
+            <label for="rsvp-guests">Αριθμός ατόμων (μαζί με εσάς)</label>
+            <input type="number" id="rsvp-guests" name="guestCount" min="1" max="20" value="1">
+          </div>
+
+          <div class="rsvp-field">
+            <label for="rsvp-comment">Σχόλιο (προαιρετικό)</label>
+            <textarea id="rsvp-comment" name="comment" maxlength="500"></textarea>
+          </div>
+
+          <div class="rsvp-hp" aria-hidden="true">
+            <label for="rsvp-hp">Μην συμπληρώσετε αυτό το πεδίο</label>
+            <input type="text" id="rsvp-hp" name="hp" tabindex="-1" autocomplete="off">
+          </div>
+
+          <button class="rsvp-submit" id="rsvp-submit" type="submit">Αποστολή</button>
+          <p class="rsvp-msg" id="rsvp-msg"></p>
+        </form>
+
+        <div class="rsvp-done" id="rsvp-done">
+          <p class="closing" style="margin-top:0;">Ευχαριστούμε για την απάντησή σας!&nbsp;&hearts;</p>
+        </div>
+      </div>
     </div>
   </div>
-
-  <div class="editor-panel" id="editor-panel">
-    <div class="editor-box">
-      <div class="editor-head">
-        <h2>Στοιχεία προσκλητηρίου</h2>
-        <button class="editor-x" id="editor-x" type="button" aria-label="Κλείσιμο">&times;</button>
-      </div>
-
-      <div class="editor-row2">
-        <div class="editor-field"><label>Όνομα γαμπρού</label><input type="text" id="in-groom-name"></div>
-        <div class="editor-field"><label>Επώνυμο</label><input type="text" id="in-groom-surname"></div>
-      </div>
-      <div class="editor-row2">
-        <div class="editor-field"><label>Όνομα νύφης</label><input type="text" id="in-bride-name"></div>
-        <div class="editor-field"><label>Επώνυμο</label><input type="text" id="in-bride-surname"></div>
-      </div>
-      <div class="editor-row2">
-        <div class="editor-field"><label>Ημερομηνία</label><input type="date" id="in-date"></div>
-        <div class="editor-field"><label>Ώρα</label><input type="time" id="in-time"></div>
-      </div>
-      <div class="editor-field"><label>Τοποθεσία</label><input type="text" id="in-venue"></div>
-      <div class="editor-row2">
-        <div class="editor-field"><label>Κουμπάρα</label><input type="text" id="in-kb-bride"></div>
-        <div class="editor-field"><label>Κουμπάρος</label><input type="text" id="in-kb-groom"></div>
-      </div>
-
-      <h2 style="margin-top:6px;">Στυλ γραμματοσειράς</h2>
-      <div class="style-grid">
-        <div class="style-swatch" data-style="calligraphic" style="font-family:'Mynerve',cursive;">Αα<span>Καλλιγραφικό</span></div>
-        <div class="style-swatch" data-style="classic" style="font-family:'Cardo',serif; font-style:italic;">Αα<span>Κλασικό italic</span></div>
-        <div class="style-swatch" data-style="romantic" style="font-family:'Alegreya',serif; font-style:italic;">Αα<span>Ρομαντικό</span></div>
-        <div class="style-swatch" data-style="editorial" style="font-family:'GFS Didot',serif;">Αα<span>Editorial</span></div>
-        <div class="style-swatch" data-style="soft" style="font-family:'Gentium Plus',serif; font-style:italic;">Αα<span>Απαλό</span></div>
-      </div>
-
-      <div class="editor-actions">
-        <button class="secondary" id="editor-cancel" type="button">Ακύρωση αλλαγών</button>
-        <button id="editor-publish" type="button">Δημοσίευση για όλους</button>
-      </div>
-      <p id="editor-status"></p>
-    </div>
-  </div>
-
-  <script id="state-data" type="application/json">{"groomName":"Ιωσήφ","groomSurname":"Χριστιανάκης","brideName":"Ναταλία","brideSurname":"Παπαζαχαρίου","date":"2027-07-10","time":"19:00","venue":"Κτήμα Κλεοπάτρα","kbBride":"Κάτια Τουρκομάνη","kbGroom":"Μάνος Γιαννουσάκης","style":"calligraphic"}</script>
   <script id="app">
   (function () {
     var WEEKDAYS = ['Κυριακή','Δευτέρα','Τρίτη','Τετάρτη','Πέμπτη','Παρασκευή','Σάββατο'];
     var MONTHS_GEN = ['Ιανουαρίου','Φεβρουαρίου','Μαρτίου','Απριλίου','Μαΐου','Ιουνίου','Ιουλίου','Αυγούστου','Σεπτεμβρίου','Οκτωβρίου','Νοεμβρίου','Δεκεμβρίου'];
 
-    function readInitialState() {
-      try { return JSON.parse(document.getElementById('state-data').textContent); }
-      catch (e) {
-        return { groomName:'Ιωσήφ', groomSurname:'Χριστιανάκης', brideName:'Ναταλία', brideSurname:'Παπαζαχαρίου',
-          date:'2027-07-10', time:'19:00', venue:'Κτήμα Κλεοπάτρα',
-          kbBride:'Κάτια Τουρκομάνη', kbGroom:'Μάνος Γιαννουσάκης', style:'calligraphic' };
-      }
-    }
-
-    var state = readInitialState();
+    var state = {
+      groomName: 'Ιωσήφ', groomSurname: 'Χριστιανάκης',
+      brideName: 'Ναταλία', brideSurname: 'Παπαζαχαρίου',
+      date: '2027-07-10', time: '19:00', venue: 'Κτήμα Κλεοπάτρα',
+      kbBride: 'Κάτια Τουρκομάνη', kbGroom: 'Μάνος Γιαννουσάκης'
+    };
     var countdownTimer = null;
-    var claudeArtifact = null;
 
     function formatGreekDate(dateStr) {
       var parts = dateStr.split('-').map(Number);
@@ -429,140 +416,72 @@
       document.getElementById('kb-bride').textContent = s.kbBride;
       document.getElementById('kb-groom').textContent = s.kbGroom;
       document.title = s.groomName + ' & ' + s.brideName;
-      document.documentElement.setAttribute('data-style', s.style === 'calligraphic' ? '' : s.style);
-      var swatches = document.querySelectorAll('.style-swatch');
-      for (var i = 0; i < swatches.length; i++) {
-        swatches[i].classList.toggle('active', swatches[i].dataset.style === s.style);
-      }
       renderCountdown(s);
       updateCalendarLink(s);
     }
 
-    function buildDoc(s) {
-      // Καθαρό "στιγμιότυπο": κλείνουμε προσωρινά το πάνελ και το status
-      // ώστε να μην "παγώσουν" ανοιχτά για κάθε νέο επισκέπτη.
-      var panel = document.getElementById('editor-panel');
-      var statusEl = document.getElementById('editor-status');
-      var wasOpen = panel.classList.contains('open');
-      var statusText = statusEl.textContent;
-      panel.classList.remove('open');
-      statusEl.textContent = '';
-
-      var appScriptText = document.getElementById('app').textContent;
-      var headMarkup = document.head.innerHTML;
-      var bodyStart = document.body.innerHTML.split('<script id="state-data"')[0];
-      var stateJson = JSON.stringify(s);
-      var styleAttr = (s.style && s.style !== 'calligraphic') ? ' data-style="' + s.style + '"' : '';
-
-      if (wasOpen) panel.classList.add('open');
-      statusEl.textContent = statusText;
-
-      return '<!doctype html>\n<html lang="el"' + styleAttr + '>\n<head>\n' + headMarkup + '\n</head>\n<body>\n'
-        + bodyStart
-        + '<script id="state-data" type="application/json">' + stateJson + '<' + '/script>\n'
-        + '<script id="app">' + appScriptText + '<' + '/script>\n'
-        + '</body>\n</html>';
-    }
-
-    function setStatus(msg) { document.getElementById('editor-status').textContent = msg || ''; }
-
-    function fillInputsFromState(s) {
-      document.getElementById('in-groom-name').value = s.groomName;
-      document.getElementById('in-groom-surname').value = s.groomSurname;
-      document.getElementById('in-bride-name').value = s.brideName;
-      document.getElementById('in-bride-surname').value = s.brideSurname;
-      document.getElementById('in-date').value = s.date;
-      document.getElementById('in-time').value = s.time;
-      document.getElementById('in-venue').value = s.venue;
-      document.getElementById('in-kb-bride').value = s.kbBride;
-      document.getElementById('in-kb-groom').value = s.kbGroom;
-    }
-
-    var fieldMap = {
-      'in-groom-name': 'groomName', 'in-groom-surname': 'groomSurname',
-      'in-bride-name': 'brideName', 'in-bride-surname': 'brideSurname',
-      'in-date': 'date', 'in-time': 'time', 'in-venue': 'venue',
-      'in-kb-bride': 'kbBride', 'in-kb-groom': 'kbGroom'
-    };
-    Object.keys(fieldMap).forEach(function (id) {
-      var el = document.getElementById(id);
-      el.addEventListener('input', function (e) {
-        state = Object.assign({}, state, (function () { var o = {}; o[fieldMap[id]] = e.target.value; return o; })());
-        render(state);
-        setStatus('Προεπισκόπηση μόνο για σένα — πάτησε «Δημοσίευση» για να το δουν όλοι.');
-      });
-    });
-
-    var swatchEls = document.querySelectorAll('.style-swatch');
-    for (var i = 0; i < swatchEls.length; i++) {
-      swatchEls[i].addEventListener('click', function () {
-        state = Object.assign({}, state, { style: this.dataset.style });
-        render(state);
-        setStatus('Προεπισκόπηση μόνο για σένα — πάτησε «Δημοσίευση» για να το δουν όλοι.');
-      });
-    }
-
-    function isEditMode() {
-      return new URLSearchParams(location.search).has('edit');
-    }
-    function exitEditMode() {
-      // Γυρνάει στον καθαρό σύνδεσμο προβολής (χωρίς ?edit) — δεν αγγίζει
-      // τη δημοσιευμένη έκδοση, απλώς κρύβει το πάνελ επεξεργασίας.
-      location.href = location.pathname;
-    }
-
-    document.getElementById('editor-x').addEventListener('click', exitEditMode);
-    document.getElementById('editor-panel').addEventListener('click', function (e) {
-      if (e.target.id === 'editor-panel') exitEditMode();
-    });
-    document.getElementById('editor-cancel').addEventListener('click', function () {
-      location.reload();
-    });
-
-    document.getElementById('editor-publish').addEventListener('click', function () {
-      var btn = document.getElementById('editor-publish');
-      if (!claudeArtifact) { setStatus('Η κοινόχρηστη δημοσίευση δεν είναι διαθέσιμη σε αυτή την προβολή.'); return; }
-      btn.disabled = true;
-      setStatus('Δημοσιεύεται για όλους...');
-      claudeArtifact.publish(buildDoc(state)).then(function () {
-        // επιτυχία: η προβολή φορτώνει ξανά αυτόματα στη νέα έκδοση
-      }, function (err) {
-        btn.disabled = false;
-        var code = err && err.code;
-        if (code === 'conflict') {
-          setStatus('Κάποιος άλλος μόλις έκανε αλλαγή — φορτώνει τη νέα έκδοση...');
-        } else if (code === 'not_writer' || code === 'not_granted' || code === 'consent_required') {
-          setStatus('Δεν έχεις δικαίωμα επεξεργασίας εδώ — μόνο προβολή.');
-          var inputs = document.querySelectorAll('.editor-box input');
-          for (var k = 0; k < inputs.length; k++) inputs[k].disabled = true;
-          for (var j = 0; j < swatchEls.length; j++) swatchEls[j].style.pointerEvents = 'none';
-          btn.hidden = true;
-        } else {
-          setStatus('Κάτι πήγε στραβά. Δοκίμασε ξανά σε λίγο.');
-        }
-      });
-    });
-
     render(state);
 
-    if (isEditMode()) {
-      fillInputsFromState(state);
-      document.getElementById('editor-panel').classList.add('open');
-    }
+    // ===== RSVP =====
+    (function initRsvp() {
+      var form = document.getElementById('rsvp-form');
+      var yesBtn = document.getElementById('rsvp-yes');
+      var noBtn = document.getElementById('rsvp-no');
+      var guestsField = document.getElementById('rsvp-guests-field');
+      var msg = document.getElementById('rsvp-msg');
+      var submitBtn = document.getElementById('rsvp-submit');
+      var attending = null;
 
-    (function initCapability() {
-      try {
-        if (window.claude && window.claude.use) {
-          window.claude.use('artifact').then(function (cap) {
-            claudeArtifact = cap;
-            if (!cap) setStatus('Η κοινόχρηστη δημοσίευση δεν είναι διαθέσιμη σε αυτή την προβολή — οι αλλαγές θα φαίνονται μόνο σε σένα.');
-          });
-        } else {
-          setStatus('Η κοινόχρηστη δημοσίευση δεν είναι διαθέσιμη σε αυτή την προβολή — οι αλλαγές θα φαίνονται μόνο σε σένα.');
-        }
-      } catch (e) {
-        setStatus('Η κοινόχρηστη δημοσίευση δεν είναι διαθέσιμη σε αυτή την προβολή — οι αλλαγές θα φαίνονται μόνο σε σένα.');
+      function selectAttending(value) {
+        attending = value;
+        yesBtn.classList.toggle('active', value === 'yes');
+        noBtn.classList.toggle('active', value === 'no');
+        guestsField.classList.toggle('show', value === 'yes');
       }
+      yesBtn.addEventListener('click', function () { selectAttending('yes'); });
+      noBtn.addEventListener('click', function () { selectAttending('no'); });
+
+      function setMsg(text, kind) {
+        msg.textContent = text || '';
+        msg.className = 'rsvp-msg' + (kind ? ' ' + kind : '');
+      }
+
+      form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        var name = document.getElementById('rsvp-name').value.trim();
+        if (!name) { setMsg('Συμπλήρωσε το όνομά σου.', 'error'); return; }
+        if (!attending) { setMsg('Πες μας αν θα είσαι μαζί μας.', 'error'); return; }
+
+        var payload = {
+          name: name,
+          attending: attending,
+          guestCount: parseInt(document.getElementById('rsvp-guests').value, 10) || 1,
+          comment: document.getElementById('rsvp-comment').value.trim(),
+          hp: document.getElementById('rsvp-hp').value
+        };
+
+        submitBtn.disabled = true;
+        setMsg('Αποστολή...', '');
+
+        fetch('/api/rsvp', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        }).then(function (res) {
+          return res.json().then(function (data) { return { ok: res.ok, data: data }; });
+        }).then(function (r) {
+          if (!r.ok || !r.data.ok) {
+            submitBtn.disabled = false;
+            setMsg((r.data && r.data.error) || 'Κάτι πήγε στραβά. Δοκίμασε ξανά.', 'error');
+            return;
+          }
+          form.classList.add('hide');
+          document.getElementById('rsvp-done').classList.add('show');
+        }).catch(function () {
+          submitBtn.disabled = false;
+          setMsg('Αποτυχία σύνδεσης. Δοκίμασε ξανά.', 'error');
+        });
+      });
     })();
   })();
   </script>
