@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Ιωσήφ &amp; Ναταλία | Γάμος</title>
+<title>Ιωσήφ &amp; Ναταλία</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Mynerve&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Mynerve&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Cardo:ital@0;1&family=Alegreya:ital,wght@0,400;0,500;1,400;1,500&family=GFS+Didot&family=Gentium+Plus:ital@0;1&display=swap" rel="stylesheet">
 <style>
   :root{
     --ink: #2b2a26;
@@ -15,13 +15,42 @@
     --gold-deep: #8c6c30;
     --gold-light: #e6d3a3;
     --paper: #fffdf9;
+    --font-names: 'Mynerve', cursive;
+    --font-names-style: normal;
+    --font-names-tracking: -0.06em;
+    --font-body: 'EB Garamond', serif;
   }
+  :root[data-style="classic"]{
+    --font-names: 'Cardo', serif;
+    --font-names-style: italic;
+    --font-names-tracking: normal;
+    --font-body: 'EB Garamond', serif;
+  }
+  :root[data-style="romantic"]{
+    --font-names: 'Alegreya', serif;
+    --font-names-style: italic;
+    --font-names-tracking: normal;
+    --font-body: 'Alegreya', serif;
+  }
+  :root[data-style="editorial"]{
+    --font-names: 'GFS Didot', serif;
+    --font-names-style: normal;
+    --font-names-tracking: 0.01em;
+    --font-body: 'EB Garamond', serif;
+  }
+  :root[data-style="soft"]{
+    --font-names: 'Gentium Plus', serif;
+    --font-names-style: italic;
+    --font-names-tracking: normal;
+    --font-body: 'Gentium Plus', serif;
+  }
+
   *{ box-sizing: border-box; }
   html,body{ margin:0; padding:0; }
   body{
     position:relative;
     min-height:100vh;
-    font-family:'EB Garamond', serif;
+    font-family: var(--font-body);
     color: var(--ink);
     background:
       radial-gradient(ellipse 520px 320px at 8% 15%, rgba(150,148,140,0.16), transparent 60%),
@@ -63,7 +92,7 @@
   .inner{ position:relative; z-index:1; }
 
   .pretitle{
-    font-family:'EB Garamond', serif;
+    font-family: var(--font-body);
     font-size: 11px;
     font-weight: 500;
     letter-spacing: 0.38em;
@@ -73,9 +102,11 @@
   }
 
   .names{
-    font-family:'Mynerve', cursive;
+    font-family: var(--font-names);
+    font-style: var(--font-names-style);
     font-weight:400;
-    font-size: clamp(46px, 11vw, 68px);
+    font-size: clamp(50px, 12vw, 76px);
+    letter-spacing: var(--font-names-tracking);
     line-height: 1.15;
     margin: 12px 0 0;
     color: var(--ink);
@@ -89,7 +120,7 @@
   }
 
   .fullnames{
-    font-family:'EB Garamond', serif;
+    font-family: var(--font-body);
     font-size: 10.5px;
     font-weight: 500;
     letter-spacing: 0.16em;
@@ -100,7 +131,7 @@
   .fullnames .sep{ color: var(--gold); margin: 0 12px; }
 
   .subtitle{
-    font-family:'EB Garamond', serif;
+    font-family: var(--font-body);
     font-weight: 300;
     font-style: italic;
     font-size: 17.5px;
@@ -118,7 +149,7 @@
   .detail-row{ margin-bottom: 28px; }
   .detail-row:last-child{ margin-bottom: 0; }
   .detail-label{
-    font-family:'EB Garamond', serif;
+    font-family: var(--font-body);
     font-size: 10px;
     font-weight: 500;
     letter-spacing: 0.3em;
@@ -127,12 +158,14 @@
     margin: 0 0 8px;
   }
   .detail-value{
+    font-family: var(--font-body);
     font-size: 24px;
     font-weight: 400;
     margin: 0;
     color: var(--ink);
   }
   .detail-sub{
+    font-family: var(--font-body);
     font-size: 15.5px;
     font-weight: 300;
     color: var(--ink-soft);
@@ -147,7 +180,7 @@
   }
   .koumbaros{ flex: 0 1 auto; min-width: 0; }
   .kb-label{
-    font-family:'EB Garamond', serif;
+    font-family: var(--font-body);
     font-size: 9.5px;
     font-weight: 500;
     letter-spacing: 0.2em;
@@ -156,6 +189,7 @@
     margin: 0 0 5px;
   }
   .kb-name{
+    font-family: var(--font-body);
     font-size: 15.5px;
     font-weight: 300;
     line-height: 1.3;
@@ -164,12 +198,13 @@
   }
 
   .countdown{
+    font-family: var(--font-body);
     font-size: 15.5px;
     font-weight: 300;
     color: var(--ink-soft);
   }
   .countdown b{
-    font-family:'EB Garamond', serif;
+    font-family: var(--font-body);
     font-weight: 600;
     font-size: 14.5px;
     color: var(--gold-deep);
@@ -178,7 +213,7 @@
 
   .cta{
     display:inline-block;
-    font-family:'EB Garamond', serif;
+    font-family: var(--font-body);
     font-size: 11px;
     font-weight: 500;
     letter-spacing: 0.2em;
@@ -193,6 +228,7 @@
   .cta:hover{ background: var(--gold); color: #fff; }
 
   .closing{
+    font-family: var(--font-body);
     margin-top: 38px;
     font-weight: 300;
     font-style: italic;
@@ -201,8 +237,10 @@
   }
   .signature{
     margin-top: 6px;
-    font-family:'Mynerve', cursive;
-    font-size: 27px;
+    font-family: var(--font-names);
+    font-style: var(--font-names-style);
+    letter-spacing: var(--font-names-tracking);
+    font-size: 30px;
     color: var(--gold-deep);
   }
 
@@ -211,6 +249,124 @@
     .venue-row{ gap: 8px; }
     .kb-name{ font-size: 13.5px; }
     .detail-value{ font-size: 21px; }
+  }
+
+  /* =====================================================
+     Επεξεργασία (client-side μόνο· οι αλλαγές μένουν στο
+     δικό σου browser μέσω localStorage, δεν αλλάζουν το
+     αρχείο ούτε αυτά που βλέπουν άλλοι σε άλλη συσκευή)
+     ===================================================== */
+  .editor-toggle{
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 20;
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    border: 1px solid var(--gold);
+    background: var(--paper);
+    color: var(--gold-deep);
+    font-size: 18px;
+    cursor: pointer;
+    box-shadow: 0 8px 24px -8px rgba(60,50,20,0.35);
+  }
+
+  .editor-panel{
+    position: fixed;
+    inset: 0;
+    z-index: 30;
+    background: rgba(30,26,18,0.45);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    font-family: 'EB Garamond', serif;
+  }
+  .editor-panel.open{ display:flex; }
+  .editor-box{
+    background: #fffefc;
+    width: 100%;
+    max-width: 420px;
+    max-height: 88vh;
+    overflow-y: auto;
+    border-radius: 8px;
+    padding: 28px 24px;
+    box-shadow: 0 30px 80px -20px rgba(0,0,0,0.4);
+  }
+  .editor-box h2{
+    font-size: 15px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--gold-deep);
+    margin: 0 0 18px;
+  }
+  .editor-field{ margin-bottom: 14px; }
+  .editor-field label{
+    display:block;
+    font-size: 12px;
+    color: var(--ink-soft);
+    margin-bottom: 4px;
+  }
+  .editor-field input{
+    width: 100%;
+    padding: 8px 10px;
+    border: 1px solid #d8d2c2;
+    border-radius: 5px;
+    font-family: inherit;
+    font-size: 15px;
+    color: var(--ink);
+    background: #fff;
+  }
+  .editor-row2{ display:flex; gap: 10px; }
+  .editor-row2 > div{ flex:1; }
+
+  .style-grid{
+    display:grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+    margin: 6px 0 20px;
+  }
+  .style-swatch{
+    border: 1px solid #d8d2c2;
+    border-radius: 6px;
+    padding: 10px 8px;
+    text-align: center;
+    cursor: pointer;
+    background: #fff;
+    font-size: 20px;
+    color: var(--ink);
+  }
+  .style-swatch span{
+    display:block;
+    font-family: 'EB Garamond', serif;
+    font-size: 10px;
+    letter-spacing: 0.05em;
+    color: var(--ink-soft);
+    margin-top: 4px;
+  }
+  .style-swatch.active{ border-color: var(--gold); background: #fbf4e4; }
+
+  .editor-actions{
+    display:flex;
+    gap: 10px;
+    margin-top: 20px;
+  }
+  .editor-actions button{
+    flex:1;
+    font-family: inherit;
+    font-size: 13px;
+    letter-spacing: 0.05em;
+    padding: 11px;
+    border-radius: 6px;
+    cursor: pointer;
+    border: 1px solid var(--gold);
+    background: var(--gold);
+    color: #fff;
+  }
+  .editor-actions button.secondary{
+    background: transparent;
+    color: var(--gold-deep);
   }
 </style>
 </head>
@@ -295,8 +451,8 @@
     <div class="inner">
       <p class="pretitle">Σας προσκαλούμε στο γάμο μας</p>
 
-      <h1 class="names">Ιωσήφ<span class="amp">&amp;</span>Ναταλία</h1>
-      <p class="fullnames">Χριστιανάκης<span class="sep">&#183;</span>Παπαζαχαρίου</p>
+      <h1 class="names"><span id="groom-name">Ιωσήφ</span><span class="amp">&amp;</span><span id="bride-name">Ναταλία</span></h1>
+      <p class="fullnames"><span id="groom-surname">Χριστιανάκης</span><span class="sep">&#183;</span><span id="bride-surname">Παπαζαχαρίου</span></p>
 
       <p class="subtitle">αποφασίσαμε να γράψουμε μαζί την πιο όμορφη ιστορία</p>
 
@@ -305,22 +461,22 @@
       <div class="detail-row">
         <p class="detail-label">Ημερομηνία</p>
         <p class="detail-value" id="event-date">Σάββατο, 10 Ιουλίου 2027</p>
-        <p class="detail-sub">ώρα τελετής 19:00</p>
+        <p class="detail-sub"><span id="event-time-label">ώρα τελετής 19:00</span></p>
       </div>
 
       <div class="detail-row">
         <p class="detail-label">Τοποθεσία</p>
-        <p class="detail-value">Κτήμα Κλεοπάτρα</p>
+        <p class="detail-value" id="venue-name">Κτήμα Κλεοπάτρα</p>
       </div>
 
       <div class="detail-row venue-row">
         <div class="koumbaros">
           <p class="kb-label">Κουμπάρα</p>
-          <p class="kb-name">Κάτια Τουρκομάνη</p>
+          <p class="kb-name" id="kb-bride">Κάτια Τουρκομάνη</p>
         </div>
         <div class="koumbaros">
           <p class="kb-label">Κουμπάρος</p>
-          <p class="kb-name">Μάνος Γιαννουσάκης</p>
+          <p class="kb-name" id="kb-groom">Μάνος Γιαννουσάκης</p>
         </div>
       </div>
 
@@ -337,28 +493,158 @@
     </div>
   </div>
 
+  <!-- ---------- Επεξεργασία (client-side, localStorage) ---------- -->
+  <button class="editor-toggle" id="editor-toggle" title="Επεξεργασία" aria-label="Επεξεργασία">&#9998;</button>
+
+  <div class="editor-panel" id="editor-panel">
+    <div class="editor-box">
+      <h2>Στοιχεία προσκλητηρίου</h2>
+
+      <div class="editor-row2">
+        <div class="editor-field">
+          <label>Όνομα γαμπρού</label>
+          <input type="text" id="in-groom-name">
+        </div>
+        <div class="editor-field">
+          <label>Επώνυμο</label>
+          <input type="text" id="in-groom-surname">
+        </div>
+      </div>
+      <div class="editor-row2">
+        <div class="editor-field">
+          <label>Όνομα νύφης</label>
+          <input type="text" id="in-bride-name">
+        </div>
+        <div class="editor-field">
+          <label>Επώνυμο</label>
+          <input type="text" id="in-bride-surname">
+        </div>
+      </div>
+
+      <div class="editor-row2">
+        <div class="editor-field">
+          <label>Ημερομηνία</label>
+          <input type="date" id="in-date">
+        </div>
+        <div class="editor-field">
+          <label>Ώρα</label>
+          <input type="time" id="in-time">
+        </div>
+      </div>
+
+      <div class="editor-field">
+        <label>Τοποθεσία</label>
+        <input type="text" id="in-venue">
+      </div>
+
+      <div class="editor-row2">
+        <div class="editor-field">
+          <label>Κουμπάρα</label>
+          <input type="text" id="in-kb-bride">
+        </div>
+        <div class="editor-field">
+          <label>Κουμπάρος</label>
+          <input type="text" id="in-kb-groom">
+        </div>
+      </div>
+
+      <h2 style="margin-top:22px;">Στυλ γραμματοσειράς</h2>
+      <div class="style-grid">
+        <div class="style-swatch" data-style="calligraphic" style="font-family:'Mynerve',cursive;">Αα<span>Καλλιγραφικό</span></div>
+        <div class="style-swatch" data-style="classic" style="font-family:'Cardo',serif; font-style:italic;">Αα<span>Κλασικό italic</span></div>
+        <div class="style-swatch" data-style="romantic" style="font-family:'Alegreya',serif; font-style:italic;">Αα<span>Ρομαντικό</span></div>
+        <div class="style-swatch" data-style="editorial" style="font-family:'GFS Didot',serif;">Αα<span>Editorial</span></div>
+        <div class="style-swatch" data-style="soft" style="font-family:'Gentium Plus',serif; font-style:italic;">Αα<span>Απαλό</span></div>
+      </div>
+
+      <div class="editor-actions">
+        <button class="secondary" id="editor-reset" type="button">Επαναφορά</button>
+        <button id="editor-close" type="button">Κλείσιμο</button>
+      </div>
+    </div>
+  </div>
+
 <script>
-  // --- Ημερομηνία γάμου: 10 Ιουλίου 2027, 19:00 (Ελλάδα) ---
-  const weddingDate = new Date('2027-07-10T19:00:00+03:00');
+  const WEEKDAYS = ['Κυριακή','Δευτέρα','Τρίτη','Τετάρτη','Πέμπτη','Παρασκευή','Σάββατο'];
+  const MONTHS_GEN = ['Ιανουαρίου','Φεβρουαρίου','Μαρτίου','Απριλίου','Μαΐου','Ιουνίου','Ιουλίου','Αυγούστου','Σεπτεμβρίου','Οκτωβρίου','Νοεμβρίου','Δεκεμβρίου'];
 
-  // --- Countdown (μία λιτή γραμμή κειμένου) ---
-  const countdownEl = document.getElementById('countdown');
-  function renderCountdown() {
-    let diff = weddingDate.getTime() - Date.now();
-    if (diff < 0) {
-      countdownEl.innerHTML = 'Ο γάμος μας ήδη γιορτάστηκε! 💍';
-      return;
-    }
-    const days = Math.floor(diff / 86400000);
-    const hours = Math.floor((diff % 86400000) / 3600000);
-    const mins = Math.floor((diff % 3600000) / 60000);
-    countdownEl.innerHTML =
-      `<b>${days}</b> ημέρες &nbsp;·&nbsp; <b>${hours}</b> ώρες &nbsp;·&nbsp; <b>${mins}</b> λεπτά`;
+  const DEFAULTS = {
+    groomName: 'Ιωσήφ', groomSurname: 'Χριστιανάκης',
+    brideName: 'Ναταλία', brideSurname: 'Παπαζαχαρίου',
+    date: '2027-07-10', time: '19:00',
+    venue: 'Κτήμα Κλεοπάτρα',
+    kbBride: 'Κάτια Τουρκομάνη', kbGroom: 'Μάνος Γιαννουσάκης',
+    style: 'calligraphic'
+  };
+
+  const STORAGE_KEY = 'wedding-invite-config';
+  function loadConfig() {
+    try {
+      const saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
+      if (saved) return Object.assign({}, DEFAULTS, saved);
+    } catch (e) {}
+    return Object.assign({}, DEFAULTS);
   }
-  renderCountdown();
-  setInterval(renderCountdown, 1000 * 30);
+  function saveConfig(cfg) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(cfg));
+  }
 
-  // --- Google Calendar link ---
+  let config = loadConfig();
+
+  function formatGreekDate(dateStr) {
+    const [y, m, d] = dateStr.split('-').map(Number);
+    const dt = new Date(y, m - 1, d);
+    return `${WEEKDAYS[dt.getDay()]}, ${d} ${MONTHS_GEN[m - 1]} ${y}`;
+  }
+
+  function applyConfig(cfg) {
+    document.getElementById('groom-name').textContent = cfg.groomName;
+    document.getElementById('bride-name').textContent = cfg.brideName;
+    document.getElementById('groom-surname').textContent = cfg.groomSurname;
+    document.getElementById('bride-surname').textContent = cfg.brideSurname;
+    document.getElementById('event-date').textContent = formatGreekDate(cfg.date);
+    document.getElementById('event-time-label').textContent = `ώρα τελετής ${cfg.time}`;
+    document.getElementById('venue-name').textContent = cfg.venue;
+    document.getElementById('kb-bride').textContent = cfg.kbBride;
+    document.getElementById('kb-groom').textContent = cfg.kbGroom;
+    document.title = `${cfg.groomName} & ${cfg.brideName} | Γάμος`;
+
+    document.documentElement.setAttribute('data-style', cfg.style === 'calligraphic' ? '' : cfg.style);
+    document.querySelectorAll('.style-swatch').forEach((el) => {
+      el.classList.toggle('active', el.dataset.style === cfg.style);
+    });
+
+    renderCountdown(cfg);
+    updateCalendarLink(cfg);
+  }
+
+  function weddingDateObj(cfg) {
+    return new Date(`${cfg.date}T${cfg.time}:00+03:00`);
+  }
+
+  let countdownTimer = null;
+  function renderCountdown(cfg) {
+    const countdownEl = document.getElementById('countdown');
+    const weddingDate = weddingDateObj(cfg);
+    if (countdownTimer) clearInterval(countdownTimer);
+
+    function tick() {
+      let diff = weddingDate.getTime() - Date.now();
+      if (diff < 0) {
+        countdownEl.innerHTML = 'Ο γάμος μας ήδη γιορτάστηκε! 💍';
+        clearInterval(countdownTimer);
+        return;
+      }
+      const days = Math.floor(diff / 86400000);
+      const hours = Math.floor((diff % 86400000) / 3600000);
+      const mins = Math.floor((diff % 3600000) / 60000);
+      countdownEl.innerHTML =
+        `<b>${days}</b> ημέρες &nbsp;·&nbsp; <b>${hours}</b> ώρες &nbsp;·&nbsp; <b>${mins}</b> λεπτά`;
+    }
+    tick();
+    countdownTimer = setInterval(tick, 1000 * 30);
+  }
+
   function toGCalDate(d) {
     return d.getUTCFullYear() +
       String(d.getUTCMonth() + 1).padStart(2, '0') +
@@ -366,13 +652,70 @@
       String(d.getUTCHours()).padStart(2, '0') +
       String(d.getUTCMinutes()).padStart(2, '0') + '00Z';
   }
-  const endDate = new Date(weddingDate.getTime() + 5 * 60 * 60 * 1000);
-  const gcalUrl = 'https://www.google.com/calendar/render?action=TEMPLATE'
-    + '&text=' + encodeURIComponent('Γάμος Ιωσήφ & Ναταλίας')
-    + '&dates=' + toGCalDate(weddingDate) + '/' + toGCalDate(endDate)
-    + '&details=' + encodeURIComponent('Σας περιμένουμε να γιορτάσουμε μαζί μας!')
-    + '&location=' + encodeURIComponent('Κτήμα Κλεοπάτρα');
-  document.getElementById('calendar-link').href = gcalUrl;
+  function updateCalendarLink(cfg) {
+    const weddingDate = weddingDateObj(cfg);
+    const endDate = new Date(weddingDate.getTime() + 5 * 60 * 60 * 1000);
+    const gcalUrl = 'https://www.google.com/calendar/render?action=TEMPLATE'
+      + '&text=' + encodeURIComponent(`Γάμος ${cfg.groomName} & ${cfg.brideName}`)
+      + '&dates=' + toGCalDate(weddingDate) + '/' + toGCalDate(endDate)
+      + '&details=' + encodeURIComponent('Σας περιμένουμε να γιορτάσουμε μαζί μας!')
+      + '&location=' + encodeURIComponent(cfg.venue);
+    document.getElementById('calendar-link').href = gcalUrl;
+  }
+
+  // --- Editor panel wiring ---
+  function fillInputsFromConfig(cfg) {
+    document.getElementById('in-groom-name').value = cfg.groomName;
+    document.getElementById('in-groom-surname').value = cfg.groomSurname;
+    document.getElementById('in-bride-name').value = cfg.brideName;
+    document.getElementById('in-bride-surname').value = cfg.brideSurname;
+    document.getElementById('in-date').value = cfg.date;
+    document.getElementById('in-time').value = cfg.time;
+    document.getElementById('in-venue').value = cfg.venue;
+    document.getElementById('in-kb-bride').value = cfg.kbBride;
+    document.getElementById('in-kb-groom').value = cfg.kbGroom;
+  }
+
+  const fieldMap = {
+    'in-groom-name': 'groomName', 'in-groom-surname': 'groomSurname',
+    'in-bride-name': 'brideName', 'in-bride-surname': 'brideSurname',
+    'in-date': 'date', 'in-time': 'time', 'in-venue': 'venue',
+    'in-kb-bride': 'kbBride', 'in-kb-groom': 'kbGroom'
+  };
+  Object.keys(fieldMap).forEach((id) => {
+    document.getElementById(id).addEventListener('input', (e) => {
+      config[fieldMap[id]] = e.target.value;
+      applyConfig(config);
+      saveConfig(config);
+    });
+  });
+
+  document.querySelectorAll('.style-swatch').forEach((el) => {
+    el.addEventListener('click', () => {
+      config.style = el.dataset.style;
+      applyConfig(config);
+      saveConfig(config);
+    });
+  });
+
+  document.getElementById('editor-toggle').addEventListener('click', () => {
+    fillInputsFromConfig(config);
+    document.getElementById('editor-panel').classList.add('open');
+  });
+  document.getElementById('editor-close').addEventListener('click', () => {
+    document.getElementById('editor-panel').classList.remove('open');
+  });
+  document.getElementById('editor-panel').addEventListener('click', (e) => {
+    if (e.target.id === 'editor-panel') e.target.classList.remove('open');
+  });
+  document.getElementById('editor-reset').addEventListener('click', () => {
+    config = Object.assign({}, DEFAULTS);
+    localStorage.removeItem(STORAGE_KEY);
+    applyConfig(config);
+    fillInputsFromConfig(config);
+  });
+
+  applyConfig(config);
 </script>
 </body>
 </html>
