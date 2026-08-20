@@ -51,6 +51,43 @@ h1 { font-size: 22px; margin: 0 0 4px; }
 #analog-clock .second-hand { stroke: #2563eb; stroke-width: 2; }
 #analog-clock .center-dot { fill: #2563eb; }
 
+/* --- Jumping pixel plumber --- */
+.mario-wrap { position: relative; height: 90px; margin: -4px 0 20px; }
+.mario-anchor { position: absolute; left: 50%; bottom: 8px; transform: translateX(-50%); }
+.mario {
+  position: relative;
+  width: 44px;
+  height: 56px;
+  transform-origin: bottom center;
+  animation: mario-jump 1s ease-in-out infinite;
+}
+.mario > div { position: absolute; }
+.m-cap { top: 0; left: 2px; width: 40px; height: 14px; background: #e02020; border-radius: 10px 10px 0 0; }
+.m-cap-brim { top: 10px; left: -4px; width: 16px; height: 6px; background: #e02020; border-radius: 4px; }
+.m-face { top: 12px; left: 8px; width: 28px; height: 16px; background: #f6b48a; border-radius: 0 0 10px 10px; }
+.m-mustache { top: 22px; left: 6px; width: 24px; height: 5px; background: #5a3212; border-radius: 2px; }
+.m-shirt { top: 26px; left: 0; width: 44px; height: 12px; background: #e02020; border-radius: 6px 6px 0 0; }
+.m-arm { top: 28px; width: 8px; height: 14px; background: #f6b48a; border-radius: 4px; }
+.m-arm-left { left: -4px; }
+.m-arm-right { left: 40px; }
+.m-strap { top: 26px; width: 5px; height: 8px; background: #2255cc; }
+.m-strap-left { left: 12px; }
+.m-strap-right { left: 27px; }
+.m-overalls { top: 30px; left: 8px; width: 28px; height: 20px; background: #2255cc; border-radius: 4px; }
+.m-button { top: 34px; left: 19px; width: 6px; height: 6px; background: #f4d03f; border-radius: 50%; }
+.m-shoe { top: 48px; width: 14px; height: 8px; background: #5a3212; border-radius: 3px; }
+.m-shoe-left { left: 6px; }
+.m-shoe-right { left: 24px; }
+
+@keyframes mario-jump {
+  0%, 100% { transform: translateY(0) scaleY(1); }
+  15%      { transform: translateY(0) scaleY(0.85); }
+  40%      { transform: translateY(-46px) scaleY(1.05); }
+  50%      { transform: translateY(-52px) scaleY(1); }
+  60%      { transform: translateY(-46px) scaleY(1.05); }
+  85%      { transform: translateY(0) scaleY(0.85); }
+}
+
 /* --- Stat tiles --- */
 .stat-grid {
   display: grid;
