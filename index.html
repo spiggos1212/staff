@@ -166,15 +166,7 @@
     .detail-value{ font-size: 21px; }
   }
 
-  /* ===== Επεξεργασία: κοινόχρηστη μέσω artifact.publish() ===== */
-  .editor-toggle{
-    position: fixed; bottom: 20px; right: 20px; z-index: 20;
-    width: 46px; height: 46px; border-radius: 50%;
-    border: 1px solid var(--gold); background: var(--paper); color: var(--gold-deep);
-    font-size: 18px; cursor: pointer; box-shadow: 0 8px 24px -8px rgba(60,50,20,0.35);
-  }
-  .editor-toggle:focus-visible{ outline: 2px solid var(--gold-deep); outline-offset: 2px; }
-
+  /* ===== Επεξεργασία: ξεχωριστός σύνδεσμος ?edit, κοινόχρηστη μέσω artifact.publish() ===== */
   .editor-panel{ position: fixed; inset: 0; z-index: 30; background: rgba(30,26,18,0.45); display: none; align-items: center; justify-content: center; padding: 20px; font-family: 'EB Garamond', serif; }
   .editor-panel.open{ display:flex; }
   .editor-box{ background: #fffefc; width: 100%; max-width: 420px; max-height: 88vh; overflow-y: auto; border-radius: 8px; padding: 24px 24px 28px; box-shadow: 0 30px 80px -20px rgba(0,0,0,0.4); }
@@ -324,8 +316,6 @@
       <p class="signature">Σας περιμένουμε&nbsp;&hearts;</p>
     </div>
   </div>
-
-  <button class="editor-toggle" id="editor-toggle" title="Επεξεργασία" aria-label="Επεξεργασία">&#9998;</button>
 
   <div class="editor-panel" id="editor-panel">
     <div class="editor-box">
@@ -512,16 +502,18 @@
       });
     }
 
-    document.getElementById('editor-toggle').addEventListener('click', function () {
-      fillInputsFromState(state);
-      setStatus('');
-      document.getElementById('editor-panel').classList.add('open');
-    });
-    document.getElementById('editor-x').addEventListener('click', function () {
-      document.getElementById('editor-panel').classList.remove('open');
-    });
+    function isEditMode() {
+      return new URLSearchParams(location.search).has('edit');
+    }
+    function exitEditMode() {
+      // Γυρνάει στον καθαρό σύνδεσμο προβολής (χωρίς ?edit) — δεν αγγίζει
+      // τη δημοσιευμένη έκδοση, απλώς κρύβει το πάνελ επεξεργασίας.
+      location.href = location.pathname;
+    }
+
+    document.getElementById('editor-x').addEventListener('click', exitEditMode);
     document.getElementById('editor-panel').addEventListener('click', function (e) {
-      if (e.target.id === 'editor-panel') e.target.classList.remove('open');
+      if (e.target.id === 'editor-panel') exitEditMode();
     });
     document.getElementById('editor-cancel').addEventListener('click', function () {
       location.reload();
@@ -552,6 +544,11 @@
     });
 
     render(state);
+
+    if (isEditMode()) {
+      fillInputsFromState(state);
+      document.getElementById('editor-panel').classList.add('open');
+    }
 
     (function initCapability() {
       try {
