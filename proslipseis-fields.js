@@ -1,17 +1,17 @@
 // Κοινός ορισμός των πεδίων "Προσλήψεις" — χρησιμοποιείται και από το index.html (φόρμα
-// υποβολής/επεξεργασίας του αιτούντα) και από το admin.html (επεξεργασία από τον admin),
+// υποβολής/επεξεργασίας του αιτούντα) και από το admin.html (πλήρης προβολή/επεξεργασία από τον admin),
 // ώστε να μην υπάρχουν δύο ξεχωριστές, πιθανόν ασύμβατες, εκδοχές της ίδιας φόρμας.
 // Απαιτεί να υπάρχει ήδη global συνάρτηση escapeHtml(str) στη σελίδα που το φορτώνει.
+//
+// Χωρισμένο σε δύο ομάδες πεδίων:
+//  - personalFields/collectPersonal: τα συμπληρώνει/επεξεργάζεται ο ίδιος ο αιτών.
+//  - hireFields/collectHire: "Στοιχεία πρόσληψης" (ημ/νία πρόσληψης, ειδικότητα, σύμβαση, ωράριο) —
+//    τα συμπληρώνει αποκλειστικά ο admin, ο αιτών δεν τα βλέπει καθόλου.
 
 window.PROSLIPSEIS_FIELDS = {
-  extraFields(data = {}) {
+  personalFields(data = {}) {
     const v = (k) => escapeHtml(data[k] || "");
     const selOpt = (label, key) => `<option ${data[key] === label ? "selected" : ""}>${label}</option>`;
-    const schedule = {};
-    (data["Ωράριο εργασίας"] || "").split(" · ").forEach((part) => {
-      const idx = part.indexOf(": ");
-      if (idx > -1) schedule[part.slice(0, idx)] = part.slice(idx + 2);
-    });
     return `
       <div class="section-title">Στοιχεία γέννησης</div>
       <div class="row2">
@@ -69,7 +69,37 @@ window.PROSLIPSEIS_FIELDS = {
         ${selOpt("ΙΕΚ", "Εκπαίδευση")}
         ${selOpt("Άλλο", "Εκπαίδευση")}
       </select>
+    `;
+  },
 
+  collectPersonal() {
+    return {
+      "Όνομα πατρός": document.getElementById("f_p_father").value,
+      "Όνομα μητρός": document.getElementById("f_p_mother").value,
+      "Τόπος γέννησης": document.getElementById("f_p_birthplace").value,
+      "Ημερομηνία γέννησης": document.getElementById("f_p_birthdate").value,
+      "Ιθαγένεια": document.getElementById("f_p_citizenship").value,
+      "Διεύθυνση": document.getElementById("f_p_address").value,
+      "Τ.Κ.": document.getElementById("f_p_tk").value,
+      "Δήμος": document.getElementById("f_p_dimos").value,
+      "Οικογενειακή κατάσταση": document.getElementById("f_p_marital").value,
+      "Τέκνα έως 18": document.getElementById("f_p_children").value,
+      "Α.Φ.Μ.": document.getElementById("f_p_afm").value,
+      "Α.Μ.Κ.Α.": document.getElementById("f_p_amka").value,
+      "Α.Μ.Α.": document.getElementById("f_p_ama").value,
+      "Εκπαίδευση": document.getElementById("f_p_education").value,
+    };
+  },
+
+  hireFields(data = {}) {
+    const v = (k) => escapeHtml(data[k] || "");
+    const selOpt = (label, key) => `<option ${data[key] === label ? "selected" : ""}>${label}</option>`;
+    const schedule = {};
+    (data["Ωράριο εργασίας"] || "").split(" · ").forEach((part) => {
+      const idx = part.indexOf(": ");
+      if (idx > -1) schedule[part.slice(0, idx)] = part.slice(idx + 2);
+    });
+    return `
       <div class="section-title">Στοιχεία πρόσληψης</div>
       <div class="row2">
         <div><label>Ημερομηνία πρόσληψης</label><input type="date" id="f_p_hiredate" value="${v("Ημερομηνία πρόσληψης")}" /></div>
@@ -94,7 +124,7 @@ window.PROSLIPSEIS_FIELDS = {
     `;
   },
 
-  collectExtra() {
+  collectHire() {
     const days = ["Δευτέρα", "Τρίτη", "Τετάρτη", "Πέμπτη", "Παρασκευή", "Σάββατο", "Κυριακή"];
     const schedule = days
       .map((d, i) => {
@@ -104,25 +134,19 @@ window.PROSLIPSEIS_FIELDS = {
       .filter(Boolean)
       .join(" · ");
     return {
-      "Όνομα πατρός": document.getElementById("f_p_father").value,
-      "Όνομα μητρός": document.getElementById("f_p_mother").value,
-      "Τόπος γέννησης": document.getElementById("f_p_birthplace").value,
-      "Ημερομηνία γέννησης": document.getElementById("f_p_birthdate").value,
-      "Ιθαγένεια": document.getElementById("f_p_citizenship").value,
-      "Διεύθυνση": document.getElementById("f_p_address").value,
-      "Τ.Κ.": document.getElementById("f_p_tk").value,
-      "Δήμος": document.getElementById("f_p_dimos").value,
-      "Οικογενειακή κατάσταση": document.getElementById("f_p_marital").value,
-      "Τέκνα έως 18": document.getElementById("f_p_children").value,
-      "Α.Φ.Μ.": document.getElementById("f_p_afm").value,
-      "Α.Μ.Κ.Α.": document.getElementById("f_p_amka").value,
-      "Α.Μ.Α.": document.getElementById("f_p_ama").value,
-      "Εκπαίδευση": document.getElementById("f_p_education").value,
       "Ημερομηνία πρόσληψης": document.getElementById("f_p_hiredate").value,
       "Ειδικότητα": document.getElementById("f_p_role").value,
       "Σύμβαση": document.getElementById("f_p_contract").value,
       "Λήξη σύμβασης": document.getElementById("f_p_contractend").value,
       "Ωράριο εργασίας": schedule,
     };
+  },
+
+  // Πλήρης φόρμα/συλλογή (personal + hire μαζί) — τη χρησιμοποιεί μόνο το admin.html.
+  extraFields(data = {}) {
+    return this.personalFields(data) + this.hireFields(data);
+  },
+  collectExtra() {
+    return { ...this.collectPersonal(), ...this.collectHire() };
   },
 };

@@ -36,10 +36,13 @@ export async function onRequestGet({ params, request, env }) {
   return json(payload);
 }
 
-// PATCH /api/tickets/:id?token=...  { full_name?, email?, phone?, details? }
-// -> ο ίδιος ο αιτών διορθώνει τα βασικά στοιχεία επικοινωνίας του αιτήματός του.
-// Το fields_json (π.χ. στοιχεία πρόσληψης: ΑΦΜ, ΑΜΚΑ κ.λπ.) ΔΕΝ επεξεργάζεται εδώ — αυτά τα
-// συμπληρώνει αποκλειστικά ο admin, μέσω του /api/admin/tickets/:id.
+// Κλειδιά της ενότητας "Στοιχεία πρόσληψης" — τα καθορίζει αποκλειστικά ο admin.
+// Ό,τι στείλει ο αιτών γι' αυτά αγνοείται· κρατιέται πάντα η ήδη αποθηκευμένη τιμή τους.
+const HIRE_FIELD_KEYS = ["Ημερομηνία πρόσληψης", "Ειδικότητα", "Σύμβαση", "Λήξη σύμβασης", "Ωράριο εργασίας"];
+
+// PATCH /api/tickets/:id?token=...  { full_name?, email?, phone?, details?, fields_json? }
+// -> ο ίδιος ο αιτών επεξεργάζεται τα δικά του στοιχεία (προσωπικά/επικοινωνίας). Τα "Στοιχεία
+// πρόσληψης" μέσα στο fields_json προστατεύονται πάντα — βλ. HIRE_FIELD_KEYS παραπάνω.
 export async function onRequestPatch({ params, request, env }) {
   const id = Number(params.id);
   const token = new URL(request.url).searchParams.get("token") || "";
@@ -74,6 +77,26 @@ export async function onRequestPatch({ params, request, env }) {
   if (typeof body.details === "string") {
     updates.push("details = ?");
     binds.push(body.details.trim() || null);
+  }
+  if (typeof body.fields_json === "string") {
+    let incoming;
+    try {
+      incoming = JSON.parse(body.fields_json);
+    } catch {
+      return json({ error: "invalid_fields_json" }, { status: 400 });
+    }
+    const current = await env.DB.prepare(`SELECT fields_json FROM tickets WHERE id = ?`).bind(id).first();
+    let currentFields = {};
+    try {
+      currentFields = JSON.parse(current?.fields_json || "{}");
+    } catch {}
+    const merged = { ...incoming };
+    for (const key of HIRE_FIELD_KEYS) {
+      if (key in currentFields) merged[key] = currentFields[key];
+      else delete merged[key];
+    }
+    updates.push("fields_json = ?");
+    binds.push(JSON.stringify(merged));
   }
   if (!updates.length) return json({ error: "nothing_to_update" }, { status: 400 });
 
