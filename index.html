@@ -653,8 +653,8 @@ async function loadStatusView() {
     if (!res.ok) throw new Error();
     const t = await res.json();
 
-    const files = t.attachments.filter((a) => a.uploaded_by === "admin");
     const staffFiles = t.attachments.filter((a) => a.uploaded_by === "staff");
+    const isHire = t.category === "proslipseis";
 
     view.innerHTML = `
       <a class="back-link" href="${location.pathname}">← Πίσω στην αρχική</a>
@@ -664,37 +664,66 @@ async function loadStatusView() {
         <p class="meta">Υποβλήθηκε: ${new Date(t.created_at).toLocaleString("el-GR")}</p>
         ${t.details ? `<div class="note-box">${escapeHtml(t.details)}</div>` : ""}
         ${t.admin_note ? `<label>Σημείωση</label><div class="note-box">${escapeHtml(t.admin_note)}</div>` : ""}
-        <label style="margin-top:18px;">Έγγραφα προς εσάς</label>
-        ${
-          files.length
-            ? `<ul class="file-list">${files.map((f) => fileRow(f, id, token)).join("")}</ul>`
-            : `<p class="meta">Δεν έχουν ανέβει έγγραφα ακόμα.</p>`
-        }
         ${
           staffFiles.length
             ? `<label style="margin-top:18px;">Δικά σας συνημμένα</label><ul class="file-list">${staffFiles.map((f) => fileRow(f, id, token)).join("")}</ul>`
             : ""
         }
         ${
-          t.category === "proslipseis"
-            ? `<button class="btn btn-outline" id="editTicketBtn" style="width:100%;margin-top:18px;">✏️ Επεξεργασία στοιχείων</button>`
+          isHire
+            ? `
+              <label style="margin-top:18px;">Προσθήκη νέων αρχείων</label>
+              <input type="file" id="statusMoreFiles" multiple />
+              <div class="form-error" id="statusAttachError"></div>
+              <button class="btn btn-primary" id="statusAddFilesBtn" style="width:100%;margin-top:10px;">Επισύναψη</button>
+              <button class="btn btn-outline" id="editTicketBtn" style="width:100%;margin-top:8px;">✏️ Επεξεργασία στοιχείων</button>
+            `
             : ""
         }
       </div>
     `;
 
-    if (t.category === "proslipseis") {
+    if (isHire) {
       saveTicketRef("proslipseis", t.id, token);
       $("#editTicketBtn").addEventListener("click", () => {
         renderProslipseisEditForm(t, { id: t.id, token });
         openOverlay(formOverlay);
       });
+      $("#statusAddFilesBtn").addEventListener("click", () => addFilesFromStatusView(t.id, token));
     }
   } catch {
     view.innerHTML = `
       <a class="back-link" href="${location.pathname}">← Πίσω στην αρχική</a>
       <div class="status-card"><p>Δεν βρέθηκε αίτημα με αυτά τα στοιχεία.</p></div>
     `;
+  }
+}
+
+async function addFilesFromStatusView(id, token) {
+  const input = $("#statusMoreFiles");
+  const errEl = $("#statusAttachError");
+  errEl.classList.remove("show");
+  if (!input.files.length) return;
+
+  const btn = $("#statusAddFilesBtn");
+  btn.disabled = true;
+  btn.textContent = "Αποστολή...";
+
+  const fd = new FormData();
+  for (const f of input.files) fd.append("files", f);
+
+  try {
+    const res = await fetch(`/api/tickets/${id}/attachments?token=${encodeURIComponent(token)}`, {
+      method: "POST",
+      body: fd,
+    });
+    if (!res.ok) throw new Error();
+    loadStatusView();
+  } catch {
+    errEl.textContent = "Κάτι πήγε στραβά. Δοκιμάστε ξανά.";
+    errEl.classList.add("show");
+    btn.disabled = false;
+    btn.textContent = "Επισύναψη";
   }
 }
 
