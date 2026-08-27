@@ -1,0 +1,605 @@
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Διαχείριση Αιτημάτων</title>
+<style>
+  :root {
+    --bg: #f4f6f9; --card: #ffffff; --ink: #1c2330; --muted: #667085; --border: #e3e7ee;
+    --blue: #2f5fd9; --blue-dark: #23459f; --green: #1a8a5f; --amber: #b8760a; --red: #c23b3b;
+    --radius: 12px; --shadow: 0 1px 2px rgba(20,25,40,.04), 0 8px 24px rgba(20,25,40,.06);
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: -apple-system, "Segoe UI", Roboto, Arial, sans-serif; background: var(--bg); color: var(--ink); }
+  .wrap { max-width: 1000px; margin: 0 auto; padding: 30px 20px 80px; }
+
+  /* login */
+  .login-wrap { max-width: 340px; margin: 90px auto; background: var(--card); border: 1px solid var(--border);
+    border-radius: var(--radius); box-shadow: var(--shadow); padding: 28px 26px; text-align: center; }
+  .login-wrap h1 { font-size: 1.3rem; margin: 0 0 18px; }
+  .login-wrap input { width: 100%; padding: 10px 12px; border: 1px solid var(--border); border-radius: 8px; font-size: .95rem; margin-bottom: 12px; }
+  .login-wrap .btn { width: 100%; }
+  .login-err { color: var(--red); font-size: .85rem; min-height: 18px; margin-bottom: 6px; }
+
+  .btn { border: none; border-radius: 8px; padding: 10px 16px; font-size: .9rem; font-weight: 600; cursor: pointer; font-family: inherit; }
+  .btn-primary { background: var(--blue); color: #fff; }
+  .btn-primary:hover { background: var(--blue-dark); }
+  .btn-primary:disabled { opacity: .6; cursor: default; }
+  .btn-ghost { background: none; color: var(--muted); }
+  .btn-approve { background: var(--green); color: #fff; }
+  .btn-approve:hover { background: #146e4b; }
+  .btn-reject { background: var(--red); color: #fff; }
+  .btn-reject:hover { background: #9c2f2f; }
+  .btn:disabled { opacity: .6; cursor: default; }
+  .btn-archive { background: #eef1f6; color: var(--ink); }
+  .btn-archive:hover { background: #e3e7ee; }
+  .btn-danger { background: #fbe9e9; color: var(--red); }
+  .btn-danger:hover { background: #f6d5d5; }
+  .btn-danger-confirm { background: var(--red); color: #fff; }
+  .danger-row { display: flex; gap: 10px; margin-top: 22px; padding-top: 18px; border-top: 1px solid var(--border); }
+  .danger-row .btn { flex: 1; font-size: .84rem; }
+  .archived-tag { font-size: .7rem; color: var(--muted); background: #eef1f6; padding: 2px 7px; border-radius: 999px; margin-left: 4px; }
+  .export-row { display: flex; gap: 8px; margin: 4px 0 16px; flex-wrap: wrap; }
+  .link-box {
+    display: flex; gap: 8px; align-items: center; background: #f0f3f9; border: 1px solid var(--border);
+    border-radius: 8px; padding: 8px 10px; margin: 4px 0 16px; word-break: break-all; font-size: .8rem;
+  }
+  .link-box input { border: none; background: none; flex: 1; font-size: .8rem; padding: 0; }
+  .btn-ghost-outline { background: #fff; color: var(--blue); border: 1px solid var(--border); font-size: .84rem; padding: 8px 12px; }
+  .btn-ghost-outline:hover { background: #f4f6f9; }
+
+  header.top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 22px; flex-wrap: wrap; gap: 10px; }
+  header.top h1 { font-size: 1.4rem; margin: 0; }
+  .top-actions { display: flex; align-items: center; gap: 8px; }
+
+  .filters { display: flex; gap: 10px; margin-bottom: 16px; flex-wrap: wrap; }
+  .filters select { padding: 8px 10px; border: 1px solid var(--border); border-radius: 8px; font-size: .88rem; background: #fff; }
+
+  table { width: 100%; border-collapse: collapse; background: var(--card); border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); }
+  th, td { text-align: right; padding: 11px 14px; font-size: .88rem; border-bottom: 1px solid var(--border); }
+  th:first-child, td:first-child, th:nth-child(2), td:nth-child(2), th:nth-child(3), td:nth-child(3) { text-align: right; }
+  th { background: #f8f9fc; color: var(--muted); font-weight: 600; font-size: .78rem; text-transform: uppercase; }
+  tbody tr { cursor: pointer; }
+  tbody tr:hover { background: #f8f9fc; }
+  tbody tr:last-child td { border-bottom: none; }
+
+  .badge { display: inline-block; font-size: .74rem; font-weight: 700; padding: 3px 9px; border-radius: 999px; }
+  .badge.pending { background: #fdf3e2; color: var(--amber); }
+  .badge.in_progress { background: #e6edff; color: var(--blue); }
+  .badge.done, .badge.approved { background: #e3f5ec; color: var(--green); }
+  .badge.rejected { background: #fbe9e9; color: var(--red); }
+  .cat-pill { font-size: .78rem; color: var(--muted); }
+  .empty { text-align: center; color: var(--muted); padding: 40px 0; }
+
+  /* detail modal */
+  .overlay { position: fixed; inset: 0; background: rgba(20,25,40,.45); display: none; align-items: flex-start;
+    justify-content: center; padding: 30px 16px; overflow-y: auto; z-index: 50; }
+  .overlay.open { display: flex; }
+  .modal { background: var(--card); border-radius: var(--radius); width: 100%; max-width: 560px; box-shadow: var(--shadow);
+    padding: 26px 26px 28px; position: relative; }
+  .modal .close-x { position: absolute; top: 14px; right: 16px; border: none; background: none; font-size: 1.3rem; color: var(--muted); cursor: pointer; }
+  .modal h3 { margin: 4px 0 2px; }
+  .modal .meta { color: var(--muted); font-size: .84rem; margin: 0 0 14px; }
+  .field-block { margin-bottom: 14px; }
+  .field-block .k { font-size: .78rem; color: var(--muted); font-weight: 600; text-transform: uppercase; margin-bottom: 3px; }
+  .field-block .v { font-size: .92rem; white-space: pre-wrap; }
+  .file-list { list-style: none; padding: 0; margin: 6px 0 0; }
+  .file-list li { display: flex; justify-content: space-between; align-items: center; padding: 7px 0; border-top: 1px solid var(--border); font-size: .88rem; }
+  .file-list li:first-child { border-top: none; }
+  .file-list a { color: var(--blue); text-decoration: none; font-weight: 600; }
+  label { display: block; font-size: .82rem; font-weight: 600; margin: 12px 0 5px; }
+  label .opt { font-weight: 400; color: var(--muted); }
+  select, textarea, input[type=text], input[type=email], input[type=tel], input[type=date], input[type=number] {
+    width: 100%; padding: 9px 11px; border: 1px solid var(--border); border-radius: 8px; font-size: .9rem; font-family: inherit; background: #fff; color: var(--ink);
+  }
+  textarea { min-height: 70px; resize: vertical; }
+  .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .section-title {
+    font-size: .76rem; font-weight: 700; text-transform: uppercase; letter-spacing: .02em;
+    color: var(--blue); margin: 20px 0 2px; padding-top: 14px; border-top: 1px solid var(--border);
+  }
+  .schedule-grid { display: flex; flex-direction: column; gap: 6px; margin-top: 4px; }
+  .schedule-row { display: flex; align-items: center; gap: 10px; }
+  .schedule-row span { width: 88px; font-size: .85rem; color: var(--muted); flex-shrink: 0; }
+  .schedule-row input { flex: 1; }
+  .upload-row { display: flex; gap: 8px; align-items: center; margin-top: 8px; }
+  .upload-row input[type=file] { flex: 1; font-size: .84rem; }
+  .leave-actions { display: flex; align-items: center; gap: 10px; margin-top: 4px; }
+  .leave-btn-row { display: flex; gap: 10px; margin-top: 10px; }
+  .leave-btn-row .btn { flex: 1; }
+  .save-status { font-size: .82rem; color: var(--green); margin-top: 8px; min-height: 16px; }
+</style>
+
+<div id="loginView" class="login-wrap" style="display:none;">
+  <h1>Διαχείριση Αιτημάτων</h1>
+  <div class="login-err" id="loginErr"></div>
+  <input type="password" id="loginPassword" placeholder="Κωδικός πρόσβασης" />
+  <button class="btn btn-primary" id="loginBtn">Σύνδεση</button>
+</div>
+
+<div id="dashView" class="wrap" style="display:none;">
+  <header class="top">
+    <h1>Αιτήματα Προσωπικού</h1>
+    <div class="top-actions">
+      <button class="btn btn-ghost-outline" id="refreshBtn">🔄 Ανανέωση</button>
+      <button class="btn btn-ghost" id="logoutBtn">Αποσύνδεση</button>
+    </div>
+  </header>
+  <div class="filters">
+    <select id="filterCategory">
+      <option value="">Όλες οι κατηγορίες</option>
+      <option value="proslipseis">Προσλήψεις</option>
+      <option value="adeies">Άδειες</option>
+      <option value="bebaioseis">Βεβαιώσεις</option>
+    </select>
+    <select id="filterStatus">
+      <option value="">Όλες οι καταστάσεις</option>
+      <option value="pending">Σε αναμονή</option>
+      <option value="in_progress">Σε εξέλιξη</option>
+      <option value="done">Ολοκληρώθηκε</option>
+      <option value="approved">Εγκρίθηκε</option>
+      <option value="rejected">Απορρίφθηκε</option>
+    </select>
+    <select id="filterArchived">
+      <option value="active">Ενεργά</option>
+      <option value="archived">Αρχειοθετημένα</option>
+      <option value="all">Όλα</option>
+    </select>
+  </div>
+  <table>
+    <thead>
+      <tr><th>#</th><th>Όνομα</th><th>Κατηγορία</th><th>Κατάσταση</th><th>Ημερομηνία</th></tr>
+    </thead>
+    <tbody id="ticketsBody"></tbody>
+  </table>
+  <div class="empty" id="emptyMsg" style="display:none;">Δεν υπάρχουν αιτήματα.</div>
+</div>
+
+<div class="overlay" id="detailOverlay">
+  <div class="modal">
+    <button class="close-x" id="detailClose">✕</button>
+    <div id="detailBody"></div>
+  </div>
+</div>
+
+<script src="/proslipseis-fields.js"></script>
+<script>
+const $ = (sel, root = document) => root.querySelector(sel);
+const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
+
+const CATEGORY_LABELS = { proslipseis: "Προσλήψεις", adeies: "Άδειες", bebaioseis: "Βεβαιώσεις" };
+const STATUS_LABELS = {
+  pending: "Σε αναμονή",
+  in_progress: "Σε εξέλιξη",
+  done: "Ολοκληρώθηκε",
+  approved: "Εγκρίθηκε",
+  rejected: "Απορρίφθηκε",
+};
+let detailIsLeave = false;
+let detailIsHire = false;
+
+function escapeHtml(str) {
+  return String(str ?? "").replace(/[&<>"']/g, (c) => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[c]));
+}
+
+async function checkAuth() {
+  const res = await fetch("/api/admin/me");
+  const data = await res.json();
+  if (data.authenticated) {
+    $("#loginView").style.display = "none";
+    $("#dashView").style.display = "block";
+    loadTickets();
+  } else {
+    $("#loginView").style.display = "block";
+    $("#dashView").style.display = "none";
+  }
+}
+
+$("#loginBtn").addEventListener("click", doLogin);
+$("#loginPassword").addEventListener("keydown", (e) => { if (e.key === "Enter") doLogin(); });
+
+async function doLogin() {
+  const password = $("#loginPassword").value;
+  const btn = $("#loginBtn");
+  btn.disabled = true;
+  $("#loginErr").textContent = "";
+  try {
+    const res = await fetch("/api/admin/login", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ password }),
+    });
+    if (!res.ok) throw new Error();
+    $("#loginPassword").value = "";
+    checkAuth();
+  } catch {
+    $("#loginErr").textContent = "Λάθος κωδικός.";
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+$("#logoutBtn").addEventListener("click", async () => {
+  await fetch("/api/admin/logout", { method: "POST" });
+  checkAuth();
+});
+
+$("#refreshBtn").addEventListener("click", async () => {
+  const btn = $("#refreshBtn");
+  btn.disabled = true;
+  await loadTickets();
+  btn.disabled = false;
+});
+
+$("#filterCategory").addEventListener("change", loadTickets);
+$("#filterStatus").addEventListener("change", loadTickets);
+$("#filterArchived").addEventListener("change", loadTickets);
+
+async function loadTickets() {
+  const category = $("#filterCategory").value;
+  const status = $("#filterStatus").value;
+  const archived = $("#filterArchived").value;
+  const params = new URLSearchParams();
+  if (category) params.set("category", category);
+  if (status) params.set("status", status);
+  params.set("archived", archived);
+
+  const res = await fetch(`/api/admin/tickets?${params}`);
+  if (res.status === 401) { checkAuth(); return; }
+  const data = await res.json();
+
+  const body = $("#ticketsBody");
+  body.innerHTML = "";
+  $("#emptyMsg").style.display = data.tickets.length ? "none" : "block";
+
+  for (const t of data.tickets) {
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
+      <td>#${t.id}</td>
+      <td>${escapeHtml(t.full_name)}</td>
+      <td class="cat-pill">${t.category_label}</td>
+      <td><span class="badge ${t.status}">${STATUS_LABELS[t.status] || t.status}</span>${t.archived ? ' <span class="archived-tag">Αρχείο</span>' : ""}</td>
+      <td>${new Date(t.created_at).toLocaleDateString("el-GR")}</td>
+    `;
+    tr.addEventListener("click", () => openDetail(t.id));
+    body.appendChild(tr);
+  }
+}
+
+const detailOverlay = $("#detailOverlay");
+$("#detailClose").addEventListener("click", () => detailOverlay.classList.remove("open"));
+detailOverlay.addEventListener("click", (e) => { if (e.target === detailOverlay) detailOverlay.classList.remove("open"); });
+
+async function openDetail(id) {
+  detailOverlay.classList.add("open");
+  $("#detailBody").innerHTML = `<p style="color:var(--muted)">Φόρτωση...</p>`;
+
+  const res = await fetch(`/api/admin/tickets/${id}`);
+  if (res.status === 401) { checkAuth(); return; }
+  const t = await res.json();
+
+  let fields = {};
+  try { fields = JSON.parse(t.fields_json || "{}"); } catch {}
+
+  const staffFiles = t.attachments.filter((a) => a.uploaded_by === "staff");
+  const adminFiles = t.attachments.filter((a) => a.uploaded_by === "admin");
+  detailIsLeave = t.category === "adeies";
+  detailIsHire = t.category === "proslipseis";
+
+  const statusHtml = detailIsLeave
+    ? `
+      <label>Κατάσταση αδείας</label>
+      <div class="leave-actions"><span class="badge ${t.status}" id="leaveBadge">${STATUS_LABELS[t.status] || t.status}</span></div>
+      <div class="leave-btn-row">
+        <button class="btn btn-approve" id="approveBtn">✅ Έγκριση</button>
+        <button class="btn btn-reject" id="rejectBtn">❌ Απόρριψη</button>
+      </div>
+    `
+    : `
+      <label>Κατάσταση</label>
+      <select id="statusSelect">
+        <option value="pending" ${t.status === "pending" ? "selected" : ""}>Σε αναμονή</option>
+        <option value="in_progress" ${t.status === "in_progress" ? "selected" : ""}>Σε εξέλιξη</option>
+        <option value="done" ${t.status === "done" ? "selected" : ""}>Ολοκληρώθηκε</option>
+      </select>
+    `;
+
+  // Στις Προσλήψεις όλα τα στοιχεία (όνομα/email/τηλέφωνο/πεδία/παρατηρήσεις) γίνονται επεξεργάσιμα εδώ,
+  // γιατί συχνά ο admin συμπληρώνει ο ίδιος κάποια από αυτά. Στις άλλες κατηγορίες μένουν read-only.
+  const metaHtml = detailIsHire
+    ? `
+      <label>Ονοματεπώνυμο</label>
+      <input type="text" id="editFullName" value="${escapeHtml(t.full_name)}" />
+      <div class="row2">
+        <div><label>Email</label><input type="email" id="editEmail" value="${escapeHtml(t.email || "")}" /></div>
+        <div><label>Τηλέφωνο</label><input type="tel" id="editPhone" value="${escapeHtml(t.phone || "")}" /></div>
+      </div>
+      <p class="meta">Υποβλήθηκε: ${new Date(t.created_at).toLocaleString("el-GR")}</p>
+    `
+    : `<p class="meta">${escapeHtml(t.full_name)} ${t.email ? "· " + escapeHtml(t.email) : ""} ${t.phone ? "· " + escapeHtml(t.phone) : ""} · ${new Date(t.created_at).toLocaleString("el-GR")}</p>`;
+
+  const fieldsSectionHtml = detailIsHire
+    ? window.PROSLIPSEIS_FIELDS.extraFields(fields)
+    : Object.entries(fields)
+        .filter(([, v]) => v)
+        .map(([k, v]) => `<div class="field-block"><div class="k">${escapeHtml(k)}</div><div class="v">${escapeHtml(v)}</div></div>`)
+        .join("");
+
+  const detailsHtml = detailIsHire
+    ? `<label>Παρατηρήσεις αιτούντα <span class="opt">(προαιρετικό)</span></label><textarea id="editDetails">${escapeHtml(t.details || "")}</textarea>`
+    : t.details
+    ? `<div class="field-block"><div class="k">Παρατηρήσεις αιτούντα</div><div class="v">${escapeHtml(t.details)}</div></div>`
+    : "";
+
+  // Στις Άδειες δεν χρειάζεται ο admin να ανεβάζει έγγραφο — η έγκριση/απόρριψη γίνεται με τα κουμπιά.
+  const attachmentsHtml = `
+    <label>Συνημμένα αιτούντα</label>
+    ${staffFiles.length ? `<ul class="file-list">${staffFiles.map(fileRow).join("")}</ul>` : `<p class="meta">Κανένα.</p>`}
+    ${
+      detailIsLeave
+        ? ""
+        : `
+          <label>Έγγραφα προς αιτούντα</label>
+          ${adminFiles.length ? `<ul class="file-list">${adminFiles.map(fileRow).join("")}</ul>` : `<p class="meta">Δεν έχει ανέβει κάτι ακόμα.</p>`}
+          <div class="upload-row">
+            <input type="file" id="adminFileInput" multiple />
+            <button class="btn btn-primary" id="adminUploadBtn">Ανέβασμα</button>
+          </div>
+        `
+    }
+  `;
+
+  const trackingLink = `${location.origin}/?id=${t.id}&token=${t.access_token}`;
+
+  $("#detailBody").innerHTML = `
+    <h3>${t.category_label} — Αίτημα #${t.id}</h3>
+    ${metaHtml}
+    <label>Σύνδεσμος παρακολούθησης αιτούντα${detailIsHire ? " (και επεξεργασίας στοιχείων)" : ""}</label>
+    <div class="link-box">
+      <input type="text" readonly value="${trackingLink}" id="trackingLinkInput" />
+      <button class="btn btn-ghost" id="copyLinkBtn">Αντιγραφή</button>
+    </div>
+    ${
+      detailIsHire
+        ? `<div class="export-row">
+            <button class="btn btn-ghost-outline" id="pdfBtn">⬇️ Λήψη PDF</button>
+            <button class="btn btn-ghost-outline" id="mailBtn">✉️ Αποστολή στη λογίστρια</button>
+          </div>`
+        : ""
+    }
+    ${fieldsSectionHtml}
+    ${detailsHtml}
+
+    ${attachmentsHtml}
+
+    ${statusHtml}
+
+    <label>Σημείωση προς τον αιτούντα</label>
+    <textarea id="adminNote">${escapeHtml(t.admin_note || "")}</textarea>
+
+    <button class="btn btn-primary" id="saveBtn" style="margin-top:14px;width:100%;">${detailIsLeave ? "Αποθήκευση σημείωσης" : "Αποθήκευση"}</button>
+    <div class="save-status" id="saveStatus"></div>
+
+    <div class="danger-row">
+      <button class="btn btn-archive" id="archiveBtn">${t.archived ? "↩️ Επαναφορά από αρχείο" : "🗄 Αρχειοθέτηση"}</button>
+      <button class="btn btn-danger" id="deleteBtn">🗑 Διαγραφή</button>
+    </div>
+  `;
+
+  if (!detailIsLeave) {
+    $("#adminUploadBtn").addEventListener("click", () => uploadAdminFiles(id));
+  }
+  $("#saveBtn").addEventListener("click", () => saveTicket(id));
+  if (detailIsLeave) {
+    $("#approveBtn").addEventListener("click", () => setLeaveStatus(id, "approved"));
+    $("#rejectBtn").addEventListener("click", () => setLeaveStatus(id, "rejected"));
+  }
+  $("#copyLinkBtn").addEventListener("click", () => {
+    $("#trackingLinkInput").select();
+    navigator.clipboard?.writeText(trackingLink);
+    $("#copyLinkBtn").textContent = "Έγινε!";
+    setTimeout(() => { $("#copyLinkBtn").textContent = "Αντιγραφή"; }, 2000);
+  });
+  $("#archiveBtn").addEventListener("click", () => toggleArchive(id, !t.archived));
+  wireDeleteButton(id);
+  if (detailIsHire) {
+    $("#pdfBtn").addEventListener("click", () => downloadTicketPdf(t, fields));
+    $("#mailBtn").addEventListener("click", () => emailToAccountant(t, fields));
+  }
+}
+
+// Email της λογίστριας για αυτόματη προσυμπλήρωση στο κουμπί "Αποστολή στη λογίστρια".
+// Άδειασέ το ("") αν προτιμάς να επιλέγεις παραλήπτη κάθε φορά στο Gmail.
+const ACCOUNTANT_EMAIL = "";
+
+function fieldsAsLines(fields) {
+  return Object.entries(fields)
+    .filter(([, v]) => v)
+    .map(([k, v]) => `${k}: ${v}`);
+}
+
+// "Λήψη PDF": ανοίγει μια καθαρή, εκτυπώσιμη σελίδα με τα στοιχεία πρόσληψης και
+// καλεί window.print(), ώστε ο admin να επιλέξει "Αποθήκευση ως PDF" — χωρίς εξωτερική βιβλιοθήκη.
+function downloadTicketPdf(t, fields) {
+  const rows = Object.entries(fields)
+    .filter(([, v]) => v)
+    .map(([k, v]) => `<tr><td class="pk">${escapeHtml(k)}</td><td>${escapeHtml(v)}</td></tr>`)
+    .join("");
+  const html = `<!doctype html><html><head><meta charset="utf-8">
+    <title>Πρόσληψη — ${escapeHtml(t.full_name)}</title>
+    <style>
+      body { font-family: Arial, sans-serif; padding: 32px; color: #1c2330; }
+      h1 { font-size: 1.3rem; margin: 0 0 2px; }
+      .sub { color: #667085; font-size: .85rem; margin: 0 0 22px; }
+      table { width: 100%; border-collapse: collapse; }
+      td { padding: 8px 10px; border-bottom: 1px solid #e3e7ee; font-size: .9rem; vertical-align: top; }
+      td.pk { font-weight: 700; color: #667085; width: 220px; }
+      .notes { margin-top: 18px; font-size: .9rem; }
+    </style></head><body>
+    <h1>Στοιχεία Πρόσληψης — ${escapeHtml(t.full_name)}</h1>
+    <p class="sub">Αίτημα #${t.id} ${t.email ? "· " + escapeHtml(t.email) : ""} ${t.phone ? "· " + escapeHtml(t.phone) : ""} · ${new Date(t.created_at).toLocaleString("el-GR")}</p>
+    <table>${rows}</table>
+    ${t.details ? `<p class="notes"><strong>Παρατηρήσεις:</strong> ${escapeHtml(t.details)}</p>` : ""}
+  </body></html>`;
+
+  const w = window.open("", "_blank");
+  if (!w) {
+    alert("Ο browser μπλόκαρε το νέο παράθυρο. Επιτρέψτε pop-ups για αυτή τη σελίδα και ξαναδοκιμάστε.");
+    return;
+  }
+  w.document.write(html);
+  w.document.close();
+  w.focus();
+  setTimeout(() => w.print(), 300);
+}
+
+// "Αποστολή στη λογίστρια": ανοίγει mailto: με προσυμπληρωμένο θέμα & κείμενο.
+// Τα αρχεία (π.χ. φωτοτυπία ταυτότητας) ΔΕΝ επισυνάπτονται αυτόματα — κανένας browser
+// δεν το υποστηρίζει μέσω mailto — γι' αυτό προστίθεται υπενθύμιση στο σώμα του email.
+function emailToAccountant(t, fields) {
+  const subject = `Πρόσληψη - ${t.full_name} - Αίτημα #${t.id}`;
+  const bodyLines = [
+    `Στοιχεία πρόσληψης — ${t.full_name}`,
+    "",
+    ...fieldsAsLines(fields),
+    "",
+    t.details ? `Παρατηρήσεις: ${t.details}` : "",
+    "",
+    "(Επισυνάψτε χειροκίνητα τη φωτοτυπία ταυτότητας/διαβατηρίου από το admin panel — δεν επισυνάπτεται αυτόματα.)",
+  ].filter((l) => l !== "");
+  const url = `mailto:${ACCOUNTANT_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(bodyLines.join("\n"))}`;
+  window.location.href = url;
+}
+
+async function toggleArchive(id, archived) {
+  const btn = $("#archiveBtn");
+  btn.disabled = true;
+  try {
+    const res = await fetch(`/api/admin/tickets/${id}`, {
+      method: "PATCH",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ archived }),
+    });
+    if (!res.ok) throw new Error();
+    openDetail(id);
+    loadTickets();
+  } catch {
+    alert("Αποτυχία ενημέρωσης.");
+    btn.disabled = false;
+  }
+}
+
+// Διαγραφή με 2 κλικ (χωρίς native confirm() που μπλοκάρει): το πρώτο κλικ ζητά
+// επιβεβαίωση, το δεύτερο (μέσα σε λίγα δευτερόλεπτα) διαγράφει οριστικά.
+function wireDeleteButton(id) {
+  const btn = $("#deleteBtn");
+  let resetTimer = null;
+  btn.addEventListener("click", () => {
+    if (btn.dataset.confirm !== "1") {
+      btn.dataset.confirm = "1";
+      btn.textContent = "Σίγουρα; Πατήστε ξανά για οριστική διαγραφή";
+      btn.classList.add("btn-danger-confirm");
+      resetTimer = setTimeout(() => {
+        btn.dataset.confirm = "";
+        btn.textContent = "🗑 Διαγραφή";
+        btn.classList.remove("btn-danger-confirm");
+      }, 4000);
+      return;
+    }
+    clearTimeout(resetTimer);
+    deleteTicket(id);
+  });
+}
+
+async function deleteTicket(id) {
+  const btn = $("#deleteBtn");
+  btn.disabled = true;
+  btn.textContent = "Διαγραφή...";
+  try {
+    const res = await fetch(`/api/admin/tickets/${id}`, { method: "DELETE" });
+    if (!res.ok) throw new Error();
+    detailOverlay.classList.remove("open");
+    loadTickets();
+  } catch {
+    alert("Αποτυχία διαγραφής.");
+    btn.disabled = false;
+    btn.textContent = "🗑 Διαγραφή";
+  }
+}
+
+async function setLeaveStatus(id, status) {
+  const admin_note = $("#adminNote").value;
+  const approveBtn = $("#approveBtn");
+  const rejectBtn = $("#rejectBtn");
+  approveBtn.disabled = true;
+  rejectBtn.disabled = true;
+  try {
+    const res = await fetch(`/api/admin/tickets/${id}`, {
+      method: "PATCH",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ status, admin_note }),
+    });
+    if (!res.ok) throw new Error();
+    openDetail(id);
+    loadTickets();
+  } catch {
+    alert("Αποτυχία ενημέρωσης.");
+    approveBtn.disabled = false;
+    rejectBtn.disabled = false;
+  }
+}
+
+function fileRow(f) {
+  return `<li><span>${escapeHtml(f.filename)}</span><a href="/api/files/${f.id}" target="_blank" rel="noopener">Λήψη</a></li>`;
+}
+
+async function uploadAdminFiles(id) {
+  const input = $("#adminFileInput");
+  if (!input.files.length) return;
+  const btn = $("#adminUploadBtn");
+  btn.disabled = true;
+  btn.textContent = "Ανέβασμα...";
+  const fd = new FormData();
+  for (const f of input.files) fd.append("files", f);
+  try {
+    const res = await fetch(`/api/admin/tickets/${id}/upload`, { method: "POST", body: fd });
+    if (!res.ok) throw new Error();
+    openDetail(id);
+    loadTickets();
+  } catch {
+    btn.disabled = false;
+    btn.textContent = "Ανέβασμα";
+    alert("Αποτυχία ανεβάσματος.");
+  }
+}
+
+async function saveTicket(id) {
+  const admin_note = $("#adminNote").value;
+  const payload = { admin_note };
+  if (!detailIsLeave) payload.status = $("#statusSelect").value;
+  if (detailIsHire) {
+    payload.full_name = $("#editFullName").value.trim();
+    payload.email = $("#editEmail").value.trim();
+    payload.phone = $("#editPhone").value.trim();
+    payload.details = $("#editDetails").value.trim();
+    payload.fields_json = JSON.stringify(window.PROSLIPSEIS_FIELDS.collectExtra());
+  }
+  const btn = $("#saveBtn");
+  btn.disabled = true;
+  try {
+    const res = await fetch(`/api/admin/tickets/${id}`, {
+      method: "PATCH",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+    if (!res.ok) throw new Error();
+    $("#saveStatus").textContent = "Αποθηκεύτηκε.";
+    loadTickets();
+  } catch {
+    $("#saveStatus").textContent = "Αποτυχία αποθήκευσης.";
+    $("#saveStatus").style.color = "var(--red)";
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+checkAuth();
+</script>

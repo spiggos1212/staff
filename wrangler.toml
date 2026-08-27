@@ -1,8 +1,12 @@
-name = "learning"
+name = "staff-ticketing"
 pages_build_output_dir = "."
 compatibility_date = "2026-08-01"
 
 [[d1_databases]]
 binding = "DB"
-database_name = "wedding-rsvp"
-database_id = "9b2a0722-59fa-4ea0-aae9-3bf6e32939f8"
+database_name = "staff-ticketing"
+database_id = "714af33d-0349-497c-b694-701b2a9a8ea1"
+
+[[r2_buckets]]
+binding = "FILES"
+bucket_name = "staff-ticketing-files"

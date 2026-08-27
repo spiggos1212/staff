@@ -1,491 +1,710 @@
-<!doctype html>
-<html lang="el">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Ιωσήφ &amp; Ναταλία</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Mynerve&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Αιτήματα Προσωπικού</title>
 <style>
-  :root{
-    --ink: #2b2a26;
-    --ink-soft: #746f64;
-    --gold: #ad8a44;
-    --gold-deep: #8c6c30;
-    --gold-light: #e6d3a3;
-    --paper: #fffdf9;
-    --font-names: 'Mynerve', cursive;
-    --font-names-style: normal;
-    --font-names-tracking: -0.06em;
-    --font-body: 'EB Garamond', serif;
+  :root {
+    --bg: #f4f6f9;
+    --card: #ffffff;
+    --ink: #1c2330;
+    --muted: #667085;
+    --border: #e3e7ee;
+    --blue: #2f5fd9;
+    --blue-dark: #23459f;
+    --green: #1a8a5f;
+    --amber: #b8760a;
+    --red: #c23b3b;
+    --radius: 14px;
+    --shadow: 0 1px 2px rgba(20, 25, 40, 0.04), 0 8px 24px rgba(20, 25, 40, 0.06);
   }
-  *{ box-sizing: border-box; }
-  html,body{ margin:0; padding:0; }
-  body{
-    position:relative;
-    min-height:100vh;
-    font-family: var(--font-body);
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+    background: var(--bg);
     color: var(--ink);
-    background:
-      radial-gradient(ellipse 520px 320px at 8% 15%, rgba(150,148,140,0.16), transparent 60%),
-      radial-gradient(ellipse 420px 260px at 95% 8%, rgba(160,155,140,0.14), transparent 55%),
-      radial-gradient(ellipse 600px 420px at 45% 95%, rgba(150,148,140,0.15), transparent 60%),
-      radial-gradient(ellipse 400px 300px at 100% 80%, rgba(160,155,140,0.12), transparent 55%),
-      linear-gradient(150deg, #f8f7f4 0%, #efede8 45%, #f9f8f5 100%);
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    padding: 40px 16px;
-    overflow-x:hidden;
+    min-height: 100vh;
+  }
+  .wrap { max-width: 880px; margin: 0 auto; padding: 40px 20px 80px; }
+  header.page-head { text-align: center; margin-bottom: 36px; }
+  header.page-head h1 { font-size: 1.9rem; margin: 0 0 8px; }
+  header.page-head p { color: var(--muted); margin: 0; font-size: 0.98rem; }
+
+  .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+  @media (max-width: 680px) { .grid { grid-template-columns: 1fr; } }
+
+  .tile {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 28px 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: transform .12s ease, box-shadow .12s ease;
+  }
+  .tile:hover { transform: translateY(-3px); box-shadow: 0 4px 6px rgba(20,25,40,.06), 0 14px 30px rgba(20,25,40,.09); }
+  .tile .icon { font-size: 2.2rem; margin-bottom: 10px; }
+  .tile h2 { font-size: 1.15rem; margin: 0 0 6px; }
+  .tile p { color: var(--muted); font-size: 0.88rem; margin: 0; }
+
+  .status-link { text-align: center; margin-top: 26px; }
+  .status-link a { color: var(--blue); font-size: 0.92rem; text-decoration: none; cursor: pointer; }
+  .status-link a:hover { text-decoration: underline; }
+
+  /* Modal */
+  .overlay {
+    position: fixed; inset: 0; background: rgba(20,25,40,.45);
+    display: none; align-items: flex-start; justify-content: center;
+    padding: 40px 16px; overflow-y: auto; z-index: 50;
+  }
+  .overlay.open { display: flex; }
+  .modal {
+    background: var(--card); border-radius: var(--radius); width: 100%; max-width: 520px;
+    box-shadow: var(--shadow); padding: 28px 26px; position: relative;
+  }
+  .modal h3 { margin: 0 0 4px; font-size: 1.25rem; }
+  .modal .modal-sub { color: var(--muted); font-size: 0.88rem; margin: 0 0 20px; }
+  .modal .close-x {
+    position: absolute; top: 16px; right: 18px; border: none; background: none;
+    font-size: 1.3rem; color: var(--muted); cursor: pointer; line-height: 1;
   }
 
-  .spray{ position: fixed; width: 210px; height: 210px; pointer-events:none; z-index: 0; opacity: 0.9; }
-  .spray.tr{ top: -20px; right: -20px; }
-  .spray.bl{ bottom: -20px; left: -20px; transform: rotate(180deg); }
-  .spray svg{ width:100%; height:100%; display:block; }
-  @media (max-width: 560px){ .spray{ width: 130px; height: 130px; } }
-
-  .card{
-    position:relative;
-    z-index: 1;
-    width:100%;
-    max-width: 500px;
-    background: var(--paper);
-    text-align:center;
-    padding: 54px 34px 46px;
-    box-shadow: 0 40px 90px -40px rgba(60,50,20,0.28), 0 2px 14px rgba(60,50,20,0.06);
+  label { display: block; font-size: 0.85rem; font-weight: 600; margin: 14px 0 5px; }
+  label .opt { font-weight: 400; color: var(--muted); }
+  input[type=text], input[type=email], input[type=tel], input[type=date], textarea, select {
+    width: 100%; padding: 10px 12px; border: 1px solid var(--border); border-radius: 8px;
+    font-size: 0.95rem; font-family: inherit; background: #fff; color: var(--ink);
   }
+  textarea { min-height: 80px; resize: vertical; }
+  input[type=file] { width: 100%; font-size: 0.88rem; margin-top: 2px; }
+  .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 
-  .veins{ position:absolute; inset:0; z-index:0; pointer-events:none; overflow:hidden; }
-  .veins svg{ width:100%; height:100%; display:block; }
-
-  .inner{ position:relative; z-index:1; }
-
-  .pretitle{
-    font-family: var(--font-body);
-    font-size: 11px;
-    font-weight: 500;
-    letter-spacing: 0.38em;
-    text-transform: uppercase;
-    color: var(--gold-deep);
-    margin: 4px 0 8px;
+  .section-title {
+    font-size: 0.76rem; font-weight: 700; text-transform: uppercase; letter-spacing: .02em;
+    color: var(--blue); margin: 22px 0 2px; padding-top: 14px; border-top: 1px solid var(--border);
   }
-
-  .weather{ display:none; font-family: var(--font-body); font-size: 12px; font-weight: 300; color: var(--ink-soft); letter-spacing: 0.02em; margin: 0 0 8px; }
-  .weather.show{ display:block; }
-
-  .names{
-    font-family: var(--font-names);
-    font-style: var(--font-names-style);
-    font-weight:400;
-    font-size: clamp(50px, 12vw, 76px);
-    letter-spacing: var(--font-names-tracking);
-    line-height: 1.15;
-    margin: 12px 0 0;
-    color: var(--ink);
-    text-wrap: balance;
+  .submenu-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 4px; }
+  @media (max-width: 480px) { .submenu-grid { grid-template-columns: 1fr; } }
+  .submenu-card {
+    border: 1px solid var(--border); border-radius: 10px; padding: 22px 14px; text-align: center;
+    cursor: pointer; transition: transform .12s ease, box-shadow .12s ease;
   }
-  .names .amp{ display:inline-block; font-size: 0.5em; color: var(--gold); margin: 0 6px; vertical-align: middle; }
+  .submenu-card:hover { transform: translateY(-2px); box-shadow: var(--shadow); }
+  .submenu-card .icon { font-size: 1.8rem; margin-bottom: 8px; }
+  .submenu-card h4 { margin: 0 0 4px; font-size: 1rem; }
+  .submenu-card p { margin: 0; font-size: 0.82rem; color: var(--muted); }
 
-  .fullnames{
-    font-family: var(--font-body);
-    font-size: 10.5px;
-    font-weight: 500;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
-    color: var(--ink-soft);
-    margin: 10px 0 0;
+  .schedule-grid { display: flex; flex-direction: column; gap: 6px; margin-top: 4px; }
+  .schedule-row { display: flex; align-items: center; gap: 10px; }
+  .schedule-row span { width: 88px; font-size: 0.85rem; color: var(--muted); flex-shrink: 0; }
+  .schedule-row input { flex: 1; }
+
+  .checklist { padding-left: 20px; font-size: 0.9rem; line-height: 1.65; margin: 4px 0 18px; }
+  .checklist ul { margin: 4px 0; padding-left: 18px; }
+
+  .btn {
+    display: inline-block; border: none; border-radius: 8px; padding: 11px 18px;
+    font-size: 0.95rem; font-weight: 600; cursor: pointer; font-family: inherit;
   }
-  .fullnames .sep{ color: var(--gold); margin: 0 12px; }
+  .btn-primary { background: var(--blue); color: #fff; width: 100%; margin-top: 20px; }
+  .btn-primary:hover { background: var(--blue-dark); }
+  .btn-primary:disabled { opacity: .6; cursor: default; }
+  .btn-ghost { background: none; color: var(--blue); padding: 8px 4px; }
+  .btn-outline { background: #fff; color: var(--blue); border: 1px solid var(--border); }
+  .btn-outline:hover { background: #f4f6f9; }
+  .btn:disabled { opacity: .6; cursor: default; }
 
-  .subtitle{ font-family: var(--font-body); font-weight: 300; font-style: italic; font-size: 17.5px; color: var(--ink-soft); margin: 24px 0 0; }
+  .form-error { color: var(--red); font-size: 0.85rem; margin-top: 10px; display: none; }
+  .form-error.show { display: block; }
 
-  .rule{ width: 1px; height: 36px; background: linear-gradient(var(--gold), var(--gold-light)); margin: 30px auto; }
-
-  .detail-row{ margin-bottom: 28px; }
-  .detail-row:last-child{ margin-bottom: 0; }
-  .detail-label{ font-family: var(--font-body); font-size: 10px; font-weight: 500; letter-spacing: 0.3em; text-transform: uppercase; color: var(--gold-deep); margin: 0 0 8px; }
-  .detail-value{ font-family: var(--font-body); font-size: 24px; font-weight: 400; margin: 0; color: var(--ink); min-height: 1em; }
-  .detail-sub{ font-family: var(--font-body); font-size: 15.5px; font-weight: 300; color: var(--ink-soft); margin: 3px 0 0; }
-
-  .venue-row{ display:flex; align-items:flex-start; justify-content:center; gap: 48px; }
-  .koumbaros{ flex: 0 1 auto; min-width: 0; }
-  .kb-label{ font-family: var(--font-body); font-size: 9.5px; font-weight: 500; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); margin: 0 0 5px; }
-  .kb-name{ font-family: var(--font-body); font-size: 15.5px; font-weight: 300; line-height: 1.3; color: var(--ink-soft); margin: 0; min-height: 1.3em; }
-
-  .countdown{ font-family: var(--font-body); font-size: 15.5px; font-weight: 300; color: var(--ink-soft); }
-  .countdown b{ font-family: var(--font-body); font-weight: 600; font-size: 14.5px; color: var(--gold-deep); margin: 0 3px; }
-
-  .cta{
-    display:inline-block;
-    font-family: var(--font-body);
-    font-size: 11px;
-    font-weight: 500;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: var(--gold-deep);
-    background: transparent;
-    border: 1px solid var(--gold);
-    padding: 13px 30px;
-    text-decoration: none;
-    transition: background 0.15s ease, color 0.15s ease;
+  .success-box { text-align: center; padding: 6px 0; }
+  .success-box .check { font-size: 2.4rem; margin-bottom: 6px; }
+  .success-box p { color: var(--muted); font-size: 0.9rem; }
+  .link-box {
+    display: flex; gap: 8px; align-items: center; background: #f0f3f9; border: 1px solid var(--border);
+    border-radius: 8px; padding: 10px 12px; margin: 14px 0; word-break: break-all; font-size: 0.85rem;
   }
-  .cta:hover{ background: var(--gold); color: #fff; }
-  .cta:focus-visible{ outline: 2px solid var(--gold-deep); outline-offset: 2px; }
+  .link-box input { border: none; background: none; flex: 1; font-size: 0.85rem; padding: 0; }
+  .warn { font-size: 0.82rem; color: var(--amber); background: #fdf3e2; border: 1px solid #f0dfb8; border-radius: 8px; padding: 10px 12px; }
 
-  .closing{ font-family: var(--font-body); margin-top: 38px; font-weight: 300; font-style: italic; font-size: 16.5px; color: var(--ink-soft); }
-  .signature{ margin-top: 6px; font-family: var(--font-names); font-style: var(--font-names-style); letter-spacing: var(--font-names-tracking); font-size: 30px; color: var(--gold-deep); }
-
-  @media (max-width: 420px){
-    .card{ padding: 46px 22px 38px; }
-    .venue-row{ gap: 8px; }
-    .kb-name{ font-size: 13.5px; }
-    .detail-value{ font-size: 21px; }
+  /* Status view */
+  .status-card {
+    background: var(--card); border: 1px solid var(--border); border-radius: var(--radius);
+    box-shadow: var(--shadow); padding: 26px 24px; margin-bottom: 24px;
   }
-
-  /* ===== RSVP ===== */
-  .rsvp{ margin-top: 40px; padding-top: 34px; border-top: 1px solid #ece7da; text-align: left; }
-  .rsvp-title{ font-family: var(--font-body); font-size: 10px; font-weight: 500; letter-spacing: 0.3em; text-transform: uppercase; color: var(--gold-deep); margin: 0 0 16px; text-align: center; }
-  .rsvp-field{ margin-bottom: 14px; }
-  .rsvp-field label{ display:block; font-size: 12px; color: var(--ink-soft); margin-bottom: 4px; }
-  .rsvp-field input, .rsvp-field textarea{ width: 100%; padding: 9px 11px; border: 1px solid #d8d2c2; border-radius: 5px; font-family: var(--font-body); font-size: 15px; color: var(--ink); background: #fff; }
-  .rsvp-field textarea{ resize: vertical; min-height: 60px; }
-  .rsvp-toggle{ display:flex; gap: 8px; }
-  .rsvp-toggle button{ flex:1; font-family: var(--font-body); font-size: 14px; padding: 10px; border-radius: 5px; border: 1px solid #d8d2c2; background: #fff; color: var(--ink-soft); cursor: pointer; }
-  .rsvp-toggle button.active{ border-color: var(--gold); background: #fbf4e4; color: var(--gold-deep); font-weight: 600; }
-  .rsvp-guests{ display: none; }
-  .rsvp-guests.show{ display: block; }
-  .rsvp-hp{ position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
-  .rsvp-submit{ width: 100%; font-family: var(--font-body); font-size: 12px; font-weight: 500; letter-spacing: 0.15em; text-transform: uppercase; color: #fff; background: var(--gold-deep); border: none; border-radius: 5px; padding: 13px; cursor: pointer; margin-top: 4px; }
-  .rsvp-submit:disabled{ opacity: 0.55; cursor: default; }
-  .rsvp-msg{ font-size: 13px; margin-top: 10px; min-height: 1.4em; text-align: center; }
-  .rsvp-msg.error{ color: #b23b3b; }
-  .rsvp-msg.ok{ color: #3a7d44; }
-  .rsvp-done{ display:none; text-align: center; padding: 10px 0; }
-  .rsvp-done.show{ display:block; }
-  .rsvp-form.hide{ display:none; }
+  .badge { display: inline-block; font-size: 0.78rem; font-weight: 700; padding: 4px 10px; border-radius: 999px; }
+  .badge.pending { background: #fdf3e2; color: var(--amber); }
+  .badge.in_progress { background: #e6edff; color: var(--blue); }
+  .badge.done, .badge.approved { background: #e3f5ec; color: var(--green); }
+  .badge.rejected { background: #fbe4e4; color: var(--red); }
+  .status-card h3 { margin: 10px 0 2px; }
+  .status-card .meta { color: var(--muted); font-size: 0.85rem; margin: 0 0 14px; }
+  .file-list { list-style: none; padding: 0; margin: 8px 0 0; }
+  .file-list li { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-top: 1px solid var(--border); font-size: 0.9rem; }
+  .file-list li:first-child { border-top: none; }
+  .file-list a { color: var(--blue); text-decoration: none; font-weight: 600; }
+  .file-list a:hover { text-decoration: underline; }
+  .note-box { background: #f6f7fb; border-radius: 8px; padding: 12px 14px; font-size: 0.9rem; margin-top: 12px; white-space: pre-wrap; }
+  .back-link { display: inline-block; margin-bottom: 18px; color: var(--muted); font-size: 0.88rem; text-decoration: none; }
 </style>
-</head>
-<body>
 
-  <div class="spray tr" aria-hidden="true">
-    <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <symbol id="orchid" viewBox="-50 -50 100 100">
-          <path d="M0 0 C -8 -8 -10 -20 0 -30 C 10 -20 8 -8 0 0 Z" fill="currentColor" opacity="0.55"/>
-          <path d="M0 0 C -12 -4 -22 -2 -30 8 C -20 12 -8 8 0 0 Z" fill="currentColor" opacity="0.55"/>
-          <path d="M0 0 C 12 -4 22 -2 30 8 C 20 12 8 8 0 0 Z" fill="currentColor" opacity="0.55"/>
-          <path d="M0 0 C -6 8 -14 14 -20 26 C -8 24 -2 16 0 0 Z" fill="currentColor" opacity="0.7"/>
-          <path d="M0 0 C 6 8 14 14 20 26 C 8 24 2 16 0 0 Z" fill="currentColor" opacity="0.7"/>
-          <path d="M0 2 C -6 8 -8 18 0 26 C 8 18 6 8 0 2 Z" fill="currentColor" opacity="0.95"/>
-          <circle cx="0" cy="0" r="2.4" fill="currentColor"/>
-        </symbol>
-      </defs>
-      <g stroke="#8c6c30" stroke-width="1.1" fill="none" opacity="0.75">
-        <path d="M198 20 C 150 45 120 70 95 110 C 78 138 70 165 55 198"/>
-        <path d="M198 55 C 165 68 140 85 118 112"/>
-        <path d="M180 8 C 155 30 138 42 118 60"/>
-      </g>
-      <g opacity="0.8">
-        <path d="M118 112 C 108 118 100 128 98 140 C 108 138 116 130 118 112 Z" fill="#b3ab8e" opacity="0.55"/>
-        <path d="M95 110 C 86 118 80 130 82 144 C 92 140 98 128 95 110 Z" fill="#b3ab8e" opacity="0.5"/>
-        <path d="M55 198 C 46 188 40 176 44 162 C 54 168 58 182 55 198 Z" fill="#b3ab8e" opacity="0.5"/>
-      </g>
-      <g color="#d8d2c2">
-        <use href="#orchid" x="180" y="18" width="56" height="56"/>
-        <use href="#orchid" x="150" y="42" width="46" height="46" transform="rotate(18 150 42)"/>
-        <use href="#orchid" x="118" y="70" width="50" height="50" transform="rotate(-14 118 70)"/>
-        <use href="#orchid" x="90"  y="108" width="42" height="42" transform="rotate(24 90 108)"/>
-        <use href="#orchid" x="60"  y="150" width="46" height="46" transform="rotate(-20 60 150)"/>
-        <use href="#orchid" x="42"  y="180" width="34" height="34" transform="rotate(10 42 180)"/>
-      </g>
-    </svg>
-  </div>
+<div class="wrap">
+  <header class="page-head">
+    <h1>Αιτήματα Προσωπικού</h1>
+    <p>Επιλέξτε την κατηγορία που αφορά το αίτημά σας</p>
+  </header>
 
-  <div class="spray bl" aria-hidden="true">
-    <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-      <g stroke="#8c6c30" stroke-width="1.1" fill="none" opacity="0.75">
-        <path d="M198 20 C 150 45 120 70 95 110 C 78 138 70 165 55 198"/>
-        <path d="M198 55 C 165 68 140 85 118 112"/>
-        <path d="M180 8 C 155 30 138 42 118 60"/>
-      </g>
-      <g opacity="0.8">
-        <path d="M118 112 C 108 118 100 128 98 140 C 108 138 116 130 118 112 Z" fill="#b3ab8e" opacity="0.55"/>
-        <path d="M95 110 C 86 118 80 130 82 144 C 92 140 98 128 95 110 Z" fill="#b3ab8e" opacity="0.5"/>
-        <path d="M55 198 C 46 188 40 176 44 162 C 54 168 58 182 55 198 Z" fill="#b3ab8e" opacity="0.5"/>
-      </g>
-      <g color="#d8d2c2">
-        <use href="#orchid" x="180" y="18" width="56" height="56"/>
-        <use href="#orchid" x="150" y="42" width="46" height="46" transform="rotate(18 150 42)"/>
-        <use href="#orchid" x="118" y="70" width="50" height="50" transform="rotate(-14 118 70)"/>
-        <use href="#orchid" x="90"  y="108" width="42" height="42" transform="rotate(24 90 108)"/>
-        <use href="#orchid" x="60"  y="150" width="46" height="46" transform="rotate(-20 60 150)"/>
-        <use href="#orchid" x="42"  y="180" width="34" height="34" transform="rotate(10 42 180)"/>
-      </g>
-    </svg>
-  </div>
-
-  <div class="card">
-    <div class="veins" aria-hidden="true">
-      <svg viewBox="0 0 500 640" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
-        <defs>
-          <linearGradient id="veinGold" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0%" stop-color="#e6d3a3"/>
-            <stop offset="50%" stop-color="#ad8a44"/>
-            <stop offset="100%" stop-color="#e6d3a3"/>
-          </linearGradient>
-        </defs>
-        <g fill="none" stroke="url(#veinGold)" opacity="0.5">
-          <path d="M-20 40 C 80 20 140 60 220 30 C 300 5 360 40 520 10" stroke-width="1.4"/>
-          <path d="M-20 70 C 60 55 120 85 200 60" stroke-width="0.8"/>
-          <path d="M520 600 C 420 615 360 585 280 605 C 200 625 140 600 -20 615" stroke-width="1.4"/>
-          <path d="M520 570 C 440 585 390 560 320 578" stroke-width="0.8"/>
-        </g>
-      </svg>
-    </div>
-
-    <div class="inner">
-      <p class="pretitle">Σας προσκαλούμε στο γάμο μας</p>
-      <p class="weather" id="weather"></p>
-
-      <h1 class="names"><span id="groom-name"></span><span class="amp">&amp;</span><span id="bride-name"></span></h1>
-      <p class="fullnames"><span id="groom-surname"></span><span class="sep">&#183;</span><span id="bride-surname"></span></p>
-
-      <p class="subtitle">αποφασίσαμε να γράψουμε μαζί την πιο όμορφη ιστορία</p>
-
-      <div class="rule"></div>
-
-      <div class="detail-row">
-        <p class="detail-label">Ημερομηνία</p>
-        <p class="detail-value" id="event-date"></p>
-        <p class="detail-sub" id="event-time-label"></p>
+  <div id="homeView">
+    <div class="grid">
+      <div class="tile" data-cat="proslipseis">
+        <div class="icon">📋</div>
+        <h2>Προσλήψεις</h2>
+        <p>Δικαιολογητικά &amp; έγγραφα για νέα πρόσληψη</p>
       </div>
-
-      <div class="detail-row">
-        <p class="detail-label">Τοποθεσία</p>
-        <p class="detail-value" id="venue-name"></p>
+      <div class="tile" data-cat="adeies">
+        <div class="icon">🌴</div>
+        <h2>Άδειες</h2>
+        <p>Αίτημα για κανονική, αναρρωτική ή άλλη άδεια</p>
       </div>
-
-      <div class="detail-row venue-row">
-        <div class="koumbaros">
-          <p class="kb-label">Κουμπάρα</p>
-          <p class="kb-name" id="kb-bride"></p>
-        </div>
-        <div class="koumbaros">
-          <p class="kb-label">Κουμπάρος</p>
-          <p class="kb-name" id="kb-groom"></p>
-        </div>
-      </div>
-
-      <div class="detail-row">
-        <p class="countdown" id="countdown"></p>
-      </div>
-
-      <div class="detail-row">
-        <a class="cta" id="calendar-link" href="#" target="_blank" rel="noopener">Προσθήκη στο ημερολόγιο</a>
-      </div>
-
-      <p class="closing">Η παρουσία σας θα είναι για εμάς η μεγαλύτερη χαρά</p>
-      <p class="signature">Σας περιμένουμε&nbsp;&hearts;</p>
-
-      <div class="rsvp">
-        <p class="rsvp-title">Δήλωση συμμετοχής</p>
-
-        <form class="rsvp-form" id="rsvp-form">
-          <div class="rsvp-field">
-            <label for="rsvp-name">Ονοματεπώνυμο</label>
-            <input type="text" id="rsvp-name" name="name" required maxlength="120" autocomplete="name">
-          </div>
-
-          <div class="rsvp-field">
-            <label>Θα είστε μαζί μας;</label>
-            <div class="rsvp-toggle">
-              <button type="button" id="rsvp-yes" data-attending="yes">Ναι, θα έρθω</button>
-              <button type="button" id="rsvp-no" data-attending="no">Δεν θα μπορέσω</button>
-            </div>
-          </div>
-
-          <div class="rsvp-field rsvp-guests" id="rsvp-guests-field">
-            <label for="rsvp-guests">Αριθμός ατόμων (μαζί με εσάς)</label>
-            <input type="number" id="rsvp-guests" name="guestCount" min="1" max="20" value="1">
-          </div>
-
-          <div class="rsvp-field">
-            <label for="rsvp-comment">Σχόλιο (προαιρετικό)</label>
-            <textarea id="rsvp-comment" name="comment" maxlength="500"></textarea>
-          </div>
-
-          <div class="rsvp-hp" aria-hidden="true">
-            <label for="rsvp-hp">Μην συμπληρώσετε αυτό το πεδίο</label>
-            <input type="text" id="rsvp-hp" name="hp" tabindex="-1" autocomplete="off">
-          </div>
-
-          <button class="rsvp-submit" id="rsvp-submit" type="submit">Αποστολή</button>
-          <p class="rsvp-msg" id="rsvp-msg"></p>
-        </form>
-
-        <div class="rsvp-done" id="rsvp-done">
-          <p class="closing" style="margin-top:0;">Ευχαριστούμε για την απάντησή σας!&nbsp;&hearts;</p>
-        </div>
+      <div class="tile" data-cat="bebaioseis">
+        <div class="icon">📄</div>
+        <h2>Βεβαιώσεις</h2>
+        <p>Βεβαίωση μισθοδοσίας ή εργασίας</p>
       </div>
     </div>
+    <div class="status-link">
+      <a id="checkStatusLink">Έχετε ήδη υποβάλει αίτημα; Ελέγξτε την κατάστασή του</a>
+    </div>
   </div>
-  <script id="app">
-  (function () {
-    var WEEKDAYS = ['Κυριακή','Δευτέρα','Τρίτη','Τετάρτη','Πέμπτη','Παρασκευή','Σάββατο'];
-    var MONTHS_GEN = ['Ιανουαρίου','Φεβρουαρίου','Μαρτίου','Απριλίου','Μαΐου','Ιουνίου','Ιουλίου','Αυγούστου','Σεπτεμβρίου','Οκτωβρίου','Νοεμβρίου','Δεκεμβρίου'];
 
-    var state = {
-      groomName: 'Ιωσήφ', groomSurname: 'Χριστιανάκης',
-      brideName: 'Ναταλία', brideSurname: 'Παπαζαχαρίου',
-      date: '2027-07-10', time: '19:00', venue: 'Κτήμα Κλεοπάτρα',
-      kbBride: 'Κάτια Τουρκομάνη', kbGroom: 'Μάνος Γιαννουσάκης'
-    };
-    var countdownTimer = null;
+  <div id="statusView" style="display:none;"></div>
+</div>
 
-    function formatGreekDate(dateStr) {
-      var parts = dateStr.split('-').map(Number);
-      var dt = new Date(parts[0], parts[1] - 1, parts[2]);
-      return WEEKDAYS[dt.getDay()] + ', ' + parts[2] + ' ' + MONTHS_GEN[parts[1] - 1] + ' ' + parts[0];
+<!-- Modal: request form -->
+<div class="overlay" id="formOverlay">
+  <div class="modal">
+    <button class="close-x" data-close>✕</button>
+    <div id="formModalBody"></div>
+  </div>
+</div>
+
+<!-- Modal: check status by id+token -->
+<div class="overlay" id="checkOverlay">
+  <div class="modal">
+    <button class="close-x" data-close>✕</button>
+    <h3>Έλεγχος αιτήματος</h3>
+    <p class="modal-sub">Επικολλήστε τον σύνδεσμο ή συμπληρώστε τον αριθμό &amp; τον κωδικό αιτήματος που λάβατε κατά την υποβολή.</p>
+    <label>Σύνδεσμος αιτήματος <span class="opt">(ή συμπληρώστε παρακάτω)</span></label>
+    <input type="text" id="checkLinkInput" placeholder="https://.../?id=12&token=..." />
+    <div class="row2">
+      <div>
+        <label>Αριθμός αιτήματος</label>
+        <input type="text" id="checkIdInput" />
+      </div>
+      <div>
+        <label>Κωδικός</label>
+        <input type="text" id="checkTokenInput" />
+      </div>
+    </div>
+    <div class="form-error" id="checkError">Δεν βρέθηκε αίτημα με αυτά τα στοιχεία.</div>
+    <button class="btn btn-primary" id="checkSubmitBtn">Έλεγχος</button>
+  </div>
+</div>
+
+<script src="/proslipseis-fields.js"></script>
+<script>
+const CATEGORIES = {
+  proslipseis: {
+    label: "Προσλήψεις",
+    icon: "📋",
+    intro: "Συμπληρώστε τα στοιχεία σας για την πρόσληψη. Η φωτοτυπία ταυτότητας/διαβατηρίου μπορεί να προστεθεί και αργότερα, από το ίδιο αίτημα.",
+    extraFields: (data = {}) => window.PROSLIPSEIS_FIELDS.extraFields(data),
+    collectExtra: () => window.PROSLIPSEIS_FIELDS.collectExtra(),
+    detailsLabel: "Παρατηρήσεις",
+    filesLabel: "Φωτοτυπία ταυτότητας / διαβατηρίου / άδειας παραμονής",
+  },
+  adeies: {
+    label: "Άδειες",
+    icon: "🌴",
+    intro: "Συμπληρώστε τον τύπο άδειας και το διάστημα που αφορά.",
+    extraFields: () => `
+      <label>Τύπος άδειας</label>
+      <select id="f_leave_type">
+        <option>Κανονική άδεια</option>
+        <option>Αναρρωτική άδεια</option>
+        <option>Άδεια γάμου</option>
+        <option>Άδεια πατρότητας/μητρότητας</option>
+        <option>Άλλη</option>
+      </select>
+      <div class="row2">
+        <div>
+          <label>Από</label>
+          <input type="date" id="f_leave_from" />
+        </div>
+        <div>
+          <label>Έως</label>
+          <input type="date" id="f_leave_to" />
+        </div>
+      </div>
+    `,
+    collectExtra: () => ({
+      type: document.getElementById("f_leave_type").value,
+      from: document.getElementById("f_leave_from").value,
+      to: document.getElementById("f_leave_to").value,
+    }),
+    detailsLabel: "Σχόλια",
+    filesLabel: "Επισύναψη (προαιρετικό)",
+  },
+  bebaioseis: {
+    label: "Βεβαιώσεις",
+    icon: "📄",
+    intro: "Επιλέξτε τι είδους βεβαίωση χρειάζεστε και για ποιο σκοπό.",
+    extraFields: () => `
+      <label>Τύπος βεβαίωσης</label>
+      <select id="f_cert_type">
+        <option>Βεβαίωση αποδοχών / μισθοδοσίας</option>
+        <option>Βεβαίωση εργασίας / απασχόλησης</option>
+        <option>Άλλη</option>
+      </select>
+      <label>Για ποιο σκοπό / φορέα</label>
+      <input type="text" id="f_cert_purpose" placeholder="π.χ. Τράπεζα, ΟΑΕΔ, ενοικίαση..." />
+    `,
+    collectExtra: () => ({
+      type: document.getElementById("f_cert_type").value,
+      purpose: document.getElementById("f_cert_purpose").value,
+    }),
+    detailsLabel: "Σχόλια",
+    filesLabel: "Επισύναψη (προαιρετικό)",
+  },
+};
+
+const $ = (sel, root = document) => root.querySelector(sel);
+const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
+
+const formOverlay = $("#formOverlay");
+const checkOverlay = $("#checkOverlay");
+
+function openOverlay(el) { el.classList.add("open"); }
+function closeOverlay(el) { el.classList.remove("open"); }
+
+$$("[data-close]").forEach((btn) =>
+  btn.addEventListener("click", (e) => closeOverlay(e.target.closest(".overlay")))
+);
+[formOverlay, checkOverlay].forEach((ov) =>
+  ov.addEventListener("click", (e) => { if (e.target === ov) closeOverlay(ov); })
+);
+
+$$(".tile").forEach((tile) => tile.addEventListener("click", () => openTile(tile.dataset.cat)));
+$("#checkStatusLink").addEventListener("click", () => openOverlay(checkOverlay));
+
+function openTile(cat) {
+  if (cat === "proslipseis") {
+    openProslipseisMenu();
+    return;
+  }
+  openForm(cat);
+}
+
+// --- Localstorage: θυμάται το ticket "Προσλήψεις" αυτού του browser, ώστε να μη
+// δημιουργείται νέο ticket κάθε φορά που κάποιος θέλει να προσθέσει ένα ακόμα δικαιολογητικό. ---
+function getSavedTicket(cat) {
+  try {
+    const raw = localStorage.getItem(`ticket_${cat}`);
+    return raw ? JSON.parse(raw) : null;
+  } catch {
+    return null;
+  }
+}
+function saveTicketRef(cat, id, token) {
+  try {
+    localStorage.setItem(`ticket_${cat}`, JSON.stringify({ id, token }));
+  } catch {}
+}
+function clearSavedTicket(cat) {
+  try {
+    localStorage.removeItem(`ticket_${cat}`);
+  } catch {}
+}
+
+function openProslipseisMenu() {
+  $("#formModalBody").innerHTML = `
+    <h3>📋 Προσλήψεις</h3>
+    <p class="modal-sub">Επιλέξτε τι θέλετε να κάνετε.</p>
+    <div class="submenu-grid">
+      <div class="submenu-card" id="checklistCard">
+        <div class="icon">📖</div>
+        <h4>Δικαιολογητικά</h4>
+        <p>Δείτε τι στοιχεία &amp; έγγραφα χρειάζεται να έχετε έτοιμα</p>
+      </div>
+      <div class="submenu-card" id="attachCard">
+        <div class="icon">📎</div>
+        <h4>Επισύναψη δικαιολογητικών</h4>
+        <p>Συμπληρώστε τα στοιχεία σας online</p>
+      </div>
+    </div>
+  `;
+  $("#checklistCard").addEventListener("click", openChecklistInfo);
+  $("#attachCard").addEventListener("click", openProslipseisAttach);
+  openOverlay(formOverlay);
+}
+
+function openChecklistInfo() {
+  $("#formModalBody").innerHTML = `
+    <h3>📖 Δικαιολογητικά για πρόσληψη</h3>
+    <p class="modal-sub">Έχετε έτοιμα τα παρακάτω πριν συμπληρώσετε τη φόρμα:</p>
+    <div class="checklist">
+      <ul>
+        <li>Προσωπικά στοιχεία: επώνυμο, όνομα, όνομα πατρός &amp; μητρός, τόπος &amp; ημερομηνία γέννησης</li>
+        <li>Ιθαγένεια — και ανάλογα:
+          <ul>
+            <li>Έλληνας/ίδα → φωτοτυπία αστυνομικής ταυτότητας</li>
+            <li>Πολίτης ΕΟΚ → φωτοτυπία ευρωπαϊκής ταυτότητας</li>
+            <li>Πολίτης εκτός ΕΟΚ → φωτοτυπία άδειας διαμονής &amp; διαβατηρίου</li>
+          </ul>
+        </li>
+        <li>Διεύθυνση κατοικίας, Τ.Κ., Δήμος, κινητό τηλέφωνο</li>
+        <li>Οικογενειακή κατάσταση &amp; αριθμός τέκνων έως 18 ετών</li>
+        <li>Α.Φ.Μ., Α.Μ.Κ.Α., Αριθμό Μητρώου ΙΚΑ/ΕΦΚΑ (Α.Μ.Α.)</li>
+        <li>Επίπεδο εκπαίδευσης</li>
+        <li>Στοιχεία πρόσληψης: ημερομηνία πρόσληψης, ειδικότητα, τύπος σύμβασης, ωράριο εργασίας</li>
+      </ul>
+    </div>
+    <button class="btn btn-primary" id="toAttachBtn" style="width:100%;">Συνέχεια στην επισύναψη →</button>
+    <button class="btn btn-ghost" data-close style="width:100%;margin-top:8px;">Κλείσιμο</button>
+  `;
+  $("#toAttachBtn").addEventListener("click", openProslipseisAttach);
+  $("[data-close]", $("#formModalBody")).addEventListener("click", () => closeOverlay(formOverlay));
+}
+
+async function openProslipseisAttach() {
+  const saved = getSavedTicket("proslipseis");
+  if (saved) {
+    $("#formModalBody").innerHTML = `<p style="color:var(--muted)">Φόρτωση...</p>`;
+    try {
+      const res = await fetch(`/api/tickets/${saved.id}?token=${encodeURIComponent(saved.token)}`);
+      if (!res.ok) throw new Error();
+      const t = await res.json();
+      renderProslipseisResume(t, saved);
+      return;
+    } catch {
+      clearSavedTicket("proslipseis");
     }
+  }
+  openForm("proslipseis");
+}
 
-    function weddingDateObj(s) { return new Date(s.date + 'T' + s.time + ':00+03:00'); }
-
-    function renderCountdown(s) {
-      var el = document.getElementById('countdown');
-      var weddingDate = weddingDateObj(s);
-      if (countdownTimer) clearInterval(countdownTimer);
-      function tick() {
-        var diff = weddingDate.getTime() - Date.now();
-        if (diff < 0) { el.innerHTML = 'Ο γάμος μας ήδη γιορτάστηκε! 💍'; clearInterval(countdownTimer); return; }
-        var days = Math.floor(diff / 86400000);
-        var hours = Math.floor((diff % 86400000) / 3600000);
-        var mins = Math.floor((diff % 3600000) / 60000);
-        el.innerHTML = '<b>' + days + '</b> ημέρες &nbsp;&middot;&nbsp; <b>' + hours + '</b> ώρες &nbsp;&middot;&nbsp; <b>' + mins + '</b> λεπτά';
-      }
-      tick();
-      countdownTimer = setInterval(tick, 30000);
+function renderProslipseisResume(t, saved, savedMsg = false) {
+  const files = t.attachments.filter((a) => a.uploaded_by === "staff");
+  $("#formModalBody").innerHTML = `
+    <h3>📎 Επισύναψη δικαιολογητικών</h3>
+    ${savedMsg ? `<p class="modal-sub" style="color:var(--green);font-weight:600;">✅ Οι αλλαγές αποθηκεύτηκαν.</p>` : ""}
+    <p class="modal-sub">Έχετε ήδη υποβάλει αίτημα #${t.id}. Μπορείτε να προσθέσετε επιπλέον αρχεία εδώ — δεν χρειάζεται να ξαναϋποβάλετε τα στοιχεία σας.</p>
+    <span class="badge ${t.status}">${STATUS_LABELS[t.status] || t.status}</span>
+    <label style="margin-top:16px;">Αρχεία που έχετε ήδη επισυνάψει</label>
+    ${
+      files.length
+        ? `<ul class="file-list">${files.map((f) => `<li><span>${escapeHtml(f.filename)}</span></li>`).join("")}</ul>`
+        : `<p class="modal-sub" style="margin:2px 0 0;">Κανένα ακόμα.</p>`
     }
+    <label>Προσθήκη νέων αρχείων</label>
+    <input type="file" id="moreFiles" multiple />
+    <div class="form-error" id="attachError"></div>
+    <button class="btn btn-primary" id="addFilesBtn" style="width:100%;margin-top:16px;">Επισύναψη</button>
+    <button class="btn btn-outline" id="editDataBtn" style="width:100%;margin-top:8px;">✏️ Επεξεργασία στοιχείων</button>
+  `;
+  $("#addFilesBtn").addEventListener("click", () => addMoreFiles(t.id, saved.token));
+  $("#editDataBtn").addEventListener("click", () => renderProslipseisEditForm(t, saved));
+}
 
-    function toGCalDate(d) {
-      return d.getUTCFullYear() + String(d.getUTCMonth() + 1).padStart(2, '0') + String(d.getUTCDate()).padStart(2, '0') +
-        'T' + String(d.getUTCHours()).padStart(2, '0') + String(d.getUTCMinutes()).padStart(2, '0') + '00Z';
-    }
+function renderProslipseisEditForm(t, saved) {
+  const conf = CATEGORIES.proslipseis;
+  let fields = {};
+  try {
+    fields = JSON.parse(t.fields_json || "{}");
+  } catch {}
+  $("#formModalBody").innerHTML = `
+    <h3>✏️ Επεξεργασία στοιχείων πρόσληψης</h3>
+    <p class="modal-sub">Αίτημα #${t.id}. Αλλάξτε ό,τι χρειάζεται και αποθηκεύστε.</p>
+    <form id="editForm">
+      <label>Ονοματεπώνυμο *</label>
+      <input type="text" id="f_name" required value="${escapeHtml(t.full_name)}" />
+      <div class="row2">
+        <div>
+          <label>Email *</label>
+          <input type="email" id="f_email" required value="${escapeHtml(t.email || "")}" />
+        </div>
+        <div>
+          <label>Τηλέφωνο <span class="opt">(προαιρετικό)</span></label>
+          <input type="tel" id="f_phone" value="${escapeHtml(t.phone || "")}" />
+        </div>
+      </div>
+      ${conf.extraFields(fields)}
+      <label>${conf.detailsLabel} <span class="opt">(προαιρετικό)</span></label>
+      <textarea id="f_details">${escapeHtml(t.details || "")}</textarea>
+      <div class="form-error" id="formError"></div>
+      <button type="submit" class="btn btn-primary" id="submitBtn">Αποθήκευση αλλαγών</button>
+      <button type="button" class="btn btn-ghost" id="cancelEditBtn" style="width:100%;margin-top:6px;">Άκυρο</button>
+    </form>
+  `;
+  $("#editForm").addEventListener("submit", (e) => submitEditForm(e, t.id, saved.token, conf));
+  $("#cancelEditBtn").addEventListener("click", () => renderProslipseisResume(t, saved));
+}
 
-    function updateCalendarLink(s) {
-      var weddingDate = weddingDateObj(s);
-      var endDate = new Date(weddingDate.getTime() + 5 * 60 * 60 * 1000);
-      var url = 'https://www.google.com/calendar/render?action=TEMPLATE'
-        + '&text=' + encodeURIComponent('Γάμος ' + s.groomName + ' & ' + s.brideName)
-        + '&dates=' + toGCalDate(weddingDate) + '/' + toGCalDate(endDate)
-        + '&details=' + encodeURIComponent('Σας περιμένουμε να γιορτάσουμε μαζί μας!')
-        + '&location=' + encodeURIComponent(s.venue);
-      document.getElementById('calendar-link').href = url;
-    }
+async function submitEditForm(e, id, token, conf) {
+  e.preventDefault();
+  const name = $("#f_name").value.trim();
+  const email = $("#f_email").value.trim();
+  const errEl = $("#formError");
+  errEl.classList.remove("show");
+  if (!name || !email) return;
 
-    function render(s) {
-      document.getElementById('groom-name').textContent = s.groomName;
-      document.getElementById('bride-name').textContent = s.brideName;
-      document.getElementById('groom-surname').textContent = s.groomSurname;
-      document.getElementById('bride-surname').textContent = s.brideSurname;
-      document.getElementById('event-date').textContent = formatGreekDate(s.date);
-      document.getElementById('event-time-label').textContent = 'ώρα τελετής ' + s.time;
-      document.getElementById('venue-name').textContent = s.venue;
-      document.getElementById('kb-bride').textContent = s.kbBride;
-      document.getElementById('kb-groom').textContent = s.kbGroom;
-      document.title = s.groomName + ' & ' + s.brideName;
-      renderCountdown(s);
-      updateCalendarLink(s);
-    }
+  const btn = $("#submitBtn");
+  btn.disabled = true;
+  btn.textContent = "Αποθήκευση...";
 
-    render(state);
+  const payload = {
+    full_name: name,
+    email,
+    phone: $("#f_phone").value.trim(),
+    details: $("#f_details").value.trim(),
+    fields_json: JSON.stringify(conf.collectExtra()),
+  };
 
-    // Τραβάμε τα τρέχοντα στοιχεία από το backend (επεξεργάσιμα από /rsvps/invitation).
-    // Αν αποτύχει, μένουν οι παραπάνω τιμές ως fallback.
-    fetch('/api/invitation').then(function (res) {
-      return res.ok ? res.json() : null;
-    }).then(function (data) {
-      if (data && data.ok && data.invitation) {
-        Object.assign(state, data.invitation);
-        render(state);
-      }
-    }).catch(function () {});
+  try {
+    const res = await fetch(`/api/tickets/${id}?token=${encodeURIComponent(token)}`, {
+      method: "PATCH",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+    if (!res.ok) throw new Error();
+    const t = await res.json();
+    saveTicketRef("proslipseis", t.id, token);
+    renderProslipseisResume(t, { id: t.id, token }, true);
+    if (new URLSearchParams(location.search).get("id")) loadStatusView();
+  } catch {
+    errEl.textContent = "Κάτι πήγε στραβά. Δοκιμάστε ξανά.";
+    errEl.classList.add("show");
+    btn.disabled = false;
+    btn.textContent = "Αποθήκευση αλλαγών";
+  }
+}
 
-    // Τρέχων καιρός Αθήνας — διακριτικό στοιχείο, αν αποτύχει απλά μένει κρυφό.
-    fetch('/api/weather').then(function (res) {
-      return res.ok ? res.json() : null;
-    }).then(function (data) {
-      if (data && data.ok && data.weather) {
-        var w = data.weather;
-        var el = document.getElementById('weather');
-        el.textContent = (w.icon ? w.icon + ' ' : '') + 'Αθήνα ' + w.temp + '°C · ' + w.description;
-        el.classList.add('show');
-      }
-    }).catch(function () {});
+async function addMoreFiles(id, token) {
+  const input = $("#moreFiles");
+  const errEl = $("#attachError");
+  errEl.classList.remove("show");
+  if (!input.files.length) return;
 
-    // ===== RSVP =====
-    (function initRsvp() {
-      var form = document.getElementById('rsvp-form');
-      var yesBtn = document.getElementById('rsvp-yes');
-      var noBtn = document.getElementById('rsvp-no');
-      var guestsField = document.getElementById('rsvp-guests-field');
-      var msg = document.getElementById('rsvp-msg');
-      var submitBtn = document.getElementById('rsvp-submit');
-      var attending = null;
+  const btn = $("#addFilesBtn");
+  btn.disabled = true;
+  btn.textContent = "Αποστολή...";
 
-      function selectAttending(value) {
-        attending = value;
-        yesBtn.classList.toggle('active', value === 'yes');
-        noBtn.classList.toggle('active', value === 'no');
-        guestsField.classList.toggle('show', value === 'yes');
-      }
-      yesBtn.addEventListener('click', function () { selectAttending('yes'); });
-      noBtn.addEventListener('click', function () { selectAttending('no'); });
+  const fd = new FormData();
+  for (const f of input.files) fd.append("files", f);
 
-      function setMsg(text, kind) {
-        msg.textContent = text || '';
-        msg.className = 'rsvp-msg' + (kind ? ' ' + kind : '');
-      }
+  try {
+    const res = await fetch(`/api/tickets/${id}/attachments?token=${encodeURIComponent(token)}`, {
+      method: "POST",
+      body: fd,
+    });
+    if (!res.ok) throw new Error();
+    openProslipseisAttach();
+  } catch {
+    errEl.textContent = "Κάτι πήγε στραβά. Δοκιμάστε ξανά.";
+    errEl.classList.add("show");
+    btn.disabled = false;
+    btn.textContent = "Επισύναψη";
+  }
+}
 
-      form.addEventListener('submit', function (e) {
-        e.preventDefault();
-        var name = document.getElementById('rsvp-name').value.trim();
-        if (!name) { setMsg('Συμπλήρωσε το όνομά σου.', 'error'); return; }
-        if (!attending) { setMsg('Πες μας αν θα είσαι μαζί μας.', 'error'); return; }
+function openForm(cat) {
+  const conf = CATEGORIES[cat];
+  $("#formModalBody").innerHTML = `
+    <h3>${conf.icon} ${conf.label}</h3>
+    <p class="modal-sub">${conf.intro}</p>
+    <form id="requestForm">
+      <label>Ονοματεπώνυμο *</label>
+      <input type="text" id="f_name" required />
+      <div class="row2">
+        <div>
+          <label>Email *</label>
+          <input type="email" id="f_email" required />
+        </div>
+        <div>
+          <label>Τηλέφωνο <span class="opt">(προαιρετικό)</span></label>
+          <input type="tel" id="f_phone" />
+        </div>
+      </div>
+      ${conf.extraFields()}
+      <label>${conf.detailsLabel} <span class="opt">(προαιρετικό)</span></label>
+      <textarea id="f_details"></textarea>
+      <label>${conf.filesLabel}</label>
+      <input type="file" id="f_files" multiple />
+      <div class="form-error" id="formError"></div>
+      <button type="submit" class="btn btn-primary" id="submitBtn">Υποβολή αιτήματος</button>
+    </form>
+  `;
+  $("#requestForm").addEventListener("submit", (e) => submitForm(e, cat, conf));
+  openOverlay(formOverlay);
+}
 
-        var payload = {
-          name: name,
-          attending: attending,
-          guestCount: parseInt(document.getElementById('rsvp-guests').value, 10) || 1,
-          comment: document.getElementById('rsvp-comment').value.trim(),
-          hp: document.getElementById('rsvp-hp').value
-        };
+async function submitForm(e, cat, conf) {
+  e.preventDefault();
+  const name = $("#f_name").value.trim();
+  const email = $("#f_email").value.trim();
+  const errEl = $("#formError");
+  errEl.classList.remove("show");
+  if (!name || !email) return;
 
-        submitBtn.disabled = true;
-        setMsg('Αποστολή...', '');
+  const btn = $("#submitBtn");
+  btn.disabled = true;
+  btn.textContent = "Αποστολή...";
 
-        fetch('/api/rsvp', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload)
-        }).then(function (res) {
-          return res.json().then(function (data) { return { ok: res.ok, data: data }; });
-        }).then(function (r) {
-          if (!r.ok || !r.data.ok) {
-            submitBtn.disabled = false;
-            setMsg((r.data && r.data.error) || 'Κάτι πήγε στραβά. Δοκίμασε ξανά.', 'error');
-            return;
-          }
-          form.classList.add('hide');
-          document.getElementById('rsvp-done').classList.add('show');
-        }).catch(function () {
-          submitBtn.disabled = false;
-          setMsg('Αποτυχία σύνδεσης. Δοκίμασε ξανά.', 'error');
-        });
+  const fd = new FormData();
+  fd.set("category", cat);
+  fd.set("full_name", name);
+  fd.set("email", $("#f_email").value.trim());
+  fd.set("phone", $("#f_phone").value.trim());
+  fd.set("details", $("#f_details").value.trim());
+  fd.set("fields_json", JSON.stringify(conf.collectExtra()));
+  const files = $("#f_files").files;
+  for (const file of files) fd.append("files", file);
+
+  try {
+    const res = await fetch("/api/tickets", { method: "POST", body: fd });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || "error");
+    if (cat === "proslipseis") saveTicketRef("proslipseis", data.id, data.access_token);
+    showSuccess(data.id, data.access_token);
+  } catch {
+    errEl.textContent = "Κάτι πήγε στραβά. Δοκιμάστε ξανά.";
+    errEl.classList.add("show");
+    btn.disabled = false;
+    btn.textContent = "Υποβολή αιτήματος";
+  }
+}
+
+function showSuccess(id, token) {
+  const link = `${location.origin}${location.pathname}?id=${id}&token=${token}`;
+  $("#formModalBody").innerHTML = `
+    <div class="success-box">
+      <div class="check">✅</div>
+      <h3>Το αίτημά σας καταχωρήθηκε</h3>
+      <p>Αριθμός αιτήματος: <strong>#${id}</strong></p>
+      <div class="link-box">
+        <input type="text" readonly value="${link}" id="successLink" />
+        <button class="btn btn-ghost" id="copyBtn">Αντιγραφή</button>
+      </div>
+      <p class="warn">Αποθηκεύστε αυτόν τον σύνδεσμο — είναι ο μόνος τρόπος να δείτε την εξέλιξη του αιτήματός σας και να κατεβάσετε τυχόν έγγραφα.</p>
+      <button class="btn btn-primary" data-close>Κλείσιμο</button>
+    </div>
+  `;
+  $("#copyBtn").addEventListener("click", () => {
+    $("#successLink").select();
+    navigator.clipboard?.writeText(link);
+    $("#copyBtn").textContent = "Έγινε!";
+  });
+  $("[data-close]", $("#formModalBody")).addEventListener("click", () => closeOverlay(formOverlay));
+}
+
+$("#checkSubmitBtn").addEventListener("click", () => {
+  const linkVal = $("#checkLinkInput").value.trim();
+  let id, token;
+  if (linkVal) {
+    try {
+      const u = new URL(linkVal, location.origin);
+      id = u.searchParams.get("id");
+      token = u.searchParams.get("token");
+    } catch {}
+  }
+  if (!id || !token) {
+    id = $("#checkIdInput").value.trim();
+    token = $("#checkTokenInput").value.trim();
+  }
+  if (!id || !token) {
+    $("#checkError").textContent = "Συμπληρώστε τον σύνδεσμο ή τα δύο πεδία.";
+    $("#checkError").classList.add("show");
+    return;
+  }
+  location.href = `${location.pathname}?id=${encodeURIComponent(id)}&token=${encodeURIComponent(token)}`;
+});
+
+const STATUS_LABELS = {
+  pending: "Σε αναμονή",
+  in_progress: "Σε εξέλιξη",
+  done: "Ολοκληρώθηκε",
+  approved: "Εγκρίθηκε",
+  rejected: "Απορρίφθηκε",
+};
+
+async function loadStatusView() {
+  const params = new URLSearchParams(location.search);
+  const id = params.get("id");
+  const token = params.get("token");
+  if (!id || !token) return;
+
+  $("#homeView").style.display = "none";
+  const view = $("#statusView");
+  view.style.display = "block";
+  view.innerHTML = `<p style="text-align:center;color:var(--muted)">Φόρτωση...</p>`;
+
+  try {
+    const res = await fetch(`/api/tickets/${encodeURIComponent(id)}?token=${encodeURIComponent(token)}`);
+    if (!res.ok) throw new Error();
+    const t = await res.json();
+
+    const files = t.attachments.filter((a) => a.uploaded_by === "admin");
+    const staffFiles = t.attachments.filter((a) => a.uploaded_by === "staff");
+
+    view.innerHTML = `
+      <a class="back-link" href="${location.pathname}">← Πίσω στην αρχική</a>
+      <div class="status-card">
+        <span class="badge ${t.status}">${STATUS_LABELS[t.status] || t.status}</span>
+        <h3>${t.category_label} — Αίτημα #${t.id}</h3>
+        <p class="meta">Υποβλήθηκε: ${new Date(t.created_at).toLocaleString("el-GR")}</p>
+        ${t.details ? `<div class="note-box">${escapeHtml(t.details)}</div>` : ""}
+        ${t.admin_note ? `<label>Σημείωση</label><div class="note-box">${escapeHtml(t.admin_note)}</div>` : ""}
+        <label style="margin-top:18px;">Έγγραφα προς εσάς</label>
+        ${
+          files.length
+            ? `<ul class="file-list">${files.map((f) => fileRow(f, id, token)).join("")}</ul>`
+            : `<p class="meta">Δεν έχουν ανέβει έγγραφα ακόμα.</p>`
+        }
+        ${
+          staffFiles.length
+            ? `<label style="margin-top:18px;">Δικά σας συνημμένα</label><ul class="file-list">${staffFiles.map((f) => fileRow(f, id, token)).join("")}</ul>`
+            : ""
+        }
+        ${
+          t.category === "proslipseis"
+            ? `<button class="btn btn-outline" id="editTicketBtn" style="width:100%;margin-top:18px;">✏️ Επεξεργασία στοιχείων</button>`
+            : ""
+        }
+      </div>
+    `;
+
+    if (t.category === "proslipseis") {
+      saveTicketRef("proslipseis", t.id, token);
+      $("#editTicketBtn").addEventListener("click", () => {
+        renderProslipseisEditForm(t, { id: t.id, token });
+        openOverlay(formOverlay);
       });
-    })();
-  })();
-  </script>
-</body>
-</html>
+    }
+  } catch {
+    view.innerHTML = `
+      <a class="back-link" href="${location.pathname}">← Πίσω στην αρχική</a>
+      <div class="status-card"><p>Δεν βρέθηκε αίτημα με αυτά τα στοιχεία.</p></div>
+    `;
+  }
+}
+
+function fileRow(f, id, token) {
+  return `<li><span>${escapeHtml(f.filename)}</span><a href="/api/files/${f.id}?token=${encodeURIComponent(token)}">Λήψη</a></li>`;
+}
+
+function escapeHtml(str) {
+  return String(str ?? "").replace(/[&<>"']/g, (c) => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[c]));
+}
+
+loadStatusView();
+</script>
