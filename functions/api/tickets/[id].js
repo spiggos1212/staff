@@ -36,8 +36,10 @@ export async function onRequestGet({ params, request, env }) {
   return json(payload);
 }
 
-// PATCH /api/tickets/:id?token=...  { full_name?, email?, phone?, details?, fields_json? }
-// -> ο ίδιος ο αιτών επεξεργάζεται τα στοιχεία που είχε υποβάλει, χωρίς να χρειάζεται νέο αίτημα.
+// PATCH /api/tickets/:id?token=...  { full_name?, email?, phone?, details? }
+// -> ο ίδιος ο αιτών διορθώνει τα βασικά στοιχεία επικοινωνίας του αιτήματός του.
+// Το fields_json (π.χ. στοιχεία πρόσληψης: ΑΦΜ, ΑΜΚΑ κ.λπ.) ΔΕΝ επεξεργάζεται εδώ — αυτά τα
+// συμπληρώνει αποκλειστικά ο admin, μέσω του /api/admin/tickets/:id.
 export async function onRequestPatch({ params, request, env }) {
   const id = Number(params.id);
   const token = new URL(request.url).searchParams.get("token") || "";
@@ -72,15 +74,6 @@ export async function onRequestPatch({ params, request, env }) {
   if (typeof body.details === "string") {
     updates.push("details = ?");
     binds.push(body.details.trim() || null);
-  }
-  if (typeof body.fields_json === "string") {
-    try {
-      JSON.parse(body.fields_json);
-    } catch {
-      return json({ error: "invalid_fields_json" }, { status: 400 });
-    }
-    updates.push("fields_json = ?");
-    binds.push(body.fields_json);
   }
   if (!updates.length) return json({ error: "nothing_to_update" }, { status: 400 });
 

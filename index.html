@@ -110,8 +110,6 @@
   .btn-primary:hover { background: var(--blue-dark); }
   .btn-primary:disabled { opacity: .6; cursor: default; }
   .btn-ghost { background: none; color: var(--blue); padding: 8px 4px; }
-  .btn-outline { background: #fff; color: var(--blue); border: 1px solid var(--border); }
-  .btn-outline:hover { background: #f4f6f9; }
   .btn:disabled { opacity: .6; cursor: default; }
 
   .form-error { color: var(--red); font-size: 0.85rem; margin-top: 10px; display: none; }
@@ -211,15 +209,14 @@
   </div>
 </div>
 
-<script src="/proslipseis-fields.js"></script>
 <script>
 const CATEGORIES = {
   proslipseis: {
     label: "Προσλήψεις",
     icon: "📋",
-    intro: "Συμπληρώστε τα στοιχεία σας για την πρόσληψη. Η φωτοτυπία ταυτότητας/διαβατηρίου μπορεί να προστεθεί και αργότερα, από το ίδιο αίτημα.",
-    extraFields: (data = {}) => window.PROSLIPSEIS_FIELDS.extraFields(data),
-    collectExtra: () => window.PROSLIPSEIS_FIELDS.collectExtra(),
+    intro: "Συμπληρώστε τα στοιχεία επικοινωνίας σας και επισυνάψτε τη φωτοτυπία ταυτότητας/διαβατηρίου. Τα υπόλοιπα στοιχεία (ΑΦΜ, ΑΜΚΑ, στοιχεία πρόσληψης κ.λπ.) θα τα συμπληρώσει ο υπεύθυνος προσωπικού.",
+    extraFields: () => "",
+    collectExtra: () => ({}),
     detailsLabel: "Παρατηρήσεις",
     filesLabel: "Φωτοτυπία ταυτότητας / διαβατηρίου / άδειας παραμονής",
   },
@@ -393,11 +390,10 @@ async function openProslipseisAttach() {
   openForm("proslipseis");
 }
 
-function renderProslipseisResume(t, saved, savedMsg = false) {
+function renderProslipseisResume(t, saved) {
   const files = t.attachments.filter((a) => a.uploaded_by === "staff");
   $("#formModalBody").innerHTML = `
     <h3>📎 Επισύναψη δικαιολογητικών</h3>
-    ${savedMsg ? `<p class="modal-sub" style="color:var(--green);font-weight:600;">✅ Οι αλλαγές αποθηκεύτηκαν.</p>` : ""}
     <p class="modal-sub">Έχετε ήδη υποβάλει αίτημα #${t.id}. Μπορείτε να προσθέσετε επιπλέον αρχεία εδώ — δεν χρειάζεται να ξαναϋποβάλετε τα στοιχεία σας.</p>
     <span class="badge ${t.status}">${STATUS_LABELS[t.status] || t.status}</span>
     <label style="margin-top:16px;">Αρχεία που έχετε ήδη επισυνάψει</label>
@@ -410,83 +406,8 @@ function renderProslipseisResume(t, saved, savedMsg = false) {
     <input type="file" id="moreFiles" multiple />
     <div class="form-error" id="attachError"></div>
     <button class="btn btn-primary" id="addFilesBtn" style="width:100%;margin-top:16px;">Επισύναψη</button>
-    <button class="btn btn-outline" id="editDataBtn" style="width:100%;margin-top:8px;">✏️ Επεξεργασία στοιχείων</button>
   `;
   $("#addFilesBtn").addEventListener("click", () => addMoreFiles(t.id, saved.token));
-  $("#editDataBtn").addEventListener("click", () => renderProslipseisEditForm(t, saved));
-}
-
-function renderProslipseisEditForm(t, saved) {
-  const conf = CATEGORIES.proslipseis;
-  let fields = {};
-  try {
-    fields = JSON.parse(t.fields_json || "{}");
-  } catch {}
-  $("#formModalBody").innerHTML = `
-    <h3>✏️ Επεξεργασία στοιχείων πρόσληψης</h3>
-    <p class="modal-sub">Αίτημα #${t.id}. Αλλάξτε ό,τι χρειάζεται και αποθηκεύστε.</p>
-    <form id="editForm">
-      <label>Ονοματεπώνυμο *</label>
-      <input type="text" id="f_name" required value="${escapeHtml(t.full_name)}" />
-      <div class="row2">
-        <div>
-          <label>Email *</label>
-          <input type="email" id="f_email" required value="${escapeHtml(t.email || "")}" />
-        </div>
-        <div>
-          <label>Τηλέφωνο <span class="opt">(προαιρετικό)</span></label>
-          <input type="tel" id="f_phone" value="${escapeHtml(t.phone || "")}" />
-        </div>
-      </div>
-      ${conf.extraFields(fields)}
-      <label>${conf.detailsLabel} <span class="opt">(προαιρετικό)</span></label>
-      <textarea id="f_details">${escapeHtml(t.details || "")}</textarea>
-      <div class="form-error" id="formError"></div>
-      <button type="submit" class="btn btn-primary" id="submitBtn">Αποθήκευση αλλαγών</button>
-      <button type="button" class="btn btn-ghost" id="cancelEditBtn" style="width:100%;margin-top:6px;">Άκυρο</button>
-    </form>
-  `;
-  $("#editForm").addEventListener("submit", (e) => submitEditForm(e, t.id, saved.token, conf));
-  $("#cancelEditBtn").addEventListener("click", () => renderProslipseisResume(t, saved));
-}
-
-async function submitEditForm(e, id, token, conf) {
-  e.preventDefault();
-  const name = $("#f_name").value.trim();
-  const email = $("#f_email").value.trim();
-  const errEl = $("#formError");
-  errEl.classList.remove("show");
-  if (!name || !email) return;
-
-  const btn = $("#submitBtn");
-  btn.disabled = true;
-  btn.textContent = "Αποθήκευση...";
-
-  const payload = {
-    full_name: name,
-    email,
-    phone: $("#f_phone").value.trim(),
-    details: $("#f_details").value.trim(),
-    fields_json: JSON.stringify(conf.collectExtra()),
-  };
-
-  try {
-    const res = await fetch(`/api/tickets/${id}?token=${encodeURIComponent(token)}`, {
-      method: "PATCH",
-      headers: { "content-type": "application/json" },
-      body: JSON.stringify(payload),
-    });
-    if (!res.ok) throw new Error();
-    const t = await res.json();
-    saveTicketRef("proslipseis", t.id, token);
-    renderProslipseisResume(t, { id: t.id, token }, true);
-    if (new URLSearchParams(location.search).get("id")) loadStatusView();
-  } catch {
-    errEl.textContent = "Κάτι πήγε στραβά. Δοκιμάστε ξανά.";
-    errEl.classList.add("show");
-    btn.disabled = false;
-    btn.textContent = "Αποθήκευση αλλαγών";
-  }
 }
 
 async function addMoreFiles(id, token) {
@@ -676,7 +597,6 @@ async function loadStatusView() {
               <input type="file" id="statusMoreFiles" multiple />
               <div class="form-error" id="statusAttachError"></div>
               <button class="btn btn-primary" id="statusAddFilesBtn" style="width:100%;margin-top:10px;">Επισύναψη</button>
-              <button class="btn btn-outline" id="editTicketBtn" style="width:100%;margin-top:8px;">✏️ Επεξεργασία στοιχείων</button>
             `
             : ""
         }
@@ -685,10 +605,6 @@ async function loadStatusView() {
 
     if (isHire) {
       saveTicketRef("proslipseis", t.id, token);
-      $("#editTicketBtn").addEventListener("click", () => {
-        renderProslipseisEditForm(t, { id: t.id, token });
-        openOverlay(formOverlay);
-      });
       $("#statusAddFilesBtn").addEventListener("click", () => addFilesFromStatusView(t.id, token));
     }
   } catch {
