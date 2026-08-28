@@ -26,7 +26,11 @@
   }
   .wrap { max-width: 880px; margin: 0 auto; padding: 40px 20px 80px; }
   header.page-head { text-align: center; margin-bottom: 36px; }
-  header.page-head h1 { font-size: 1.9rem; margin: 0 0 8px; }
+  header.page-head h1 {
+    font-size: 1.9rem; margin: 0 0 8px;
+    display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+  }
+  header.page-head h1 .title-icon { font-size: 1.15em; line-height: 1; }
   header.page-head p { color: var(--muted); margin: 0; font-size: 0.98rem; }
 
   .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
@@ -150,7 +154,7 @@
 
 <div class="wrap">
   <header class="page-head">
-    <h1>Αιτήματα Προσωπικού</h1>
+    <h1><span class="title-icon" aria-hidden="true">👮</span> Αιτήματα Προσωπικού</h1>
     <p>Επιλέξτε την κατηγορία που αφορά το αίτημά σας</p>
   </header>
 
