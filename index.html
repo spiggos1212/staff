@@ -541,24 +541,55 @@ async function addMoreFiles(id, token) {
   }
 }
 
+// Η φόρμα γίνεται σε δύο βήματα: πρώτα τα στοιχεία επικοινωνίας (ονοματεπώνυμο, email, τηλέφωνο),
+// και μόνο αφού συμπληρωθούν σωστά προχωράει στα υπόλοιπα (ειδικά πεδία κατηγορίας, αρχεία, υποβολή).
+// Έτσι ο αιτών δεν βλέπει ένα μεγάλο μπλοκ πεδίων εξαρχής.
 function openForm(cat) {
   const conf = CATEGORIES[cat];
+  renderFormStep1(cat, conf);
+  openOverlay(formOverlay);
+}
+
+function renderFormStep1(cat, conf, contact = {}) {
+  $("#formModalBody").innerHTML = `
+    <h3>${conf.icon} ${conf.label}</h3>
+    <p class="modal-sub">${conf.intro}</p>
+    <form id="step1Form">
+      <label>Ονοματεπώνυμο *</label>
+      <input type="text" id="f_name" required value="${escapeHtml(contact.name || "")}" />
+      <div class="row2">
+        <div>
+          <label>Email *</label>
+          <input type="email" id="f_email" required value="${escapeHtml(contact.email || "")}" />
+        </div>
+        <div>
+          <label>Τηλέφωνο <span class="opt">(προαιρετικό)</span></label>
+          <input type="tel" id="f_phone" value="${escapeHtml(contact.phone || "")}" />
+        </div>
+      </div>
+      <div class="form-error" id="step1Error">Συμπληρώστε ονοματεπώνυμο και email.</div>
+      <button type="submit" class="btn btn-primary" id="step1Btn">Συνέχεια →</button>
+    </form>
+  `;
+  $("#step1Form").addEventListener("submit", (e) => {
+    e.preventDefault();
+    const name = $("#f_name").value.trim();
+    const email = $("#f_email").value.trim();
+    const errEl = $("#step1Error");
+    if (!name || !email) {
+      errEl.classList.add("show");
+      return;
+    }
+    errEl.classList.remove("show");
+    renderFormStep2(cat, conf, { name, email, phone: $("#f_phone").value.trim() });
+  });
+}
+
+function renderFormStep2(cat, conf, contact) {
   $("#formModalBody").innerHTML = `
     <h3>${conf.icon} ${conf.label}</h3>
     <p class="modal-sub">${conf.intro}</p>
     <form id="requestForm">
-      <label>Ονοματεπώνυμο *</label>
-      <input type="text" id="f_name" required />
-      <div class="row2">
-        <div>
-          <label>Email *</label>
-          <input type="email" id="f_email" required />
-        </div>
-        <div>
-          <label>Τηλέφωνο <span class="opt">(προαιρετικό)</span></label>
-          <input type="tel" id="f_phone" />
-        </div>
-      </div>
       ${conf.extraFields()}
       ${conf.detailsLabel ? `
       <label>${conf.detailsLabel} <span class="opt">(προαιρετικό)</span></label>
@@ -567,19 +598,17 @@ function openForm(cat) {
       <input type="file" id="f_files" multiple />
       <div class="form-error" id="formError"></div>
       <button type="submit" class="btn btn-primary" id="submitBtn">Υποβολή αιτήματος</button>
+      <button type="button" class="btn btn-ghost" id="backToContactBtn" style="width:100%;margin-top:8px;">← Πίσω</button>
     </form>
   `;
-  $("#requestForm").addEventListener("submit", (e) => submitForm(e, cat, conf));
-  openOverlay(formOverlay);
+  $("#requestForm").addEventListener("submit", (e) => submitForm(e, cat, conf, contact));
+  $("#backToContactBtn").addEventListener("click", () => renderFormStep1(cat, conf, contact));
 }
 
-async function submitForm(e, cat, conf) {
+async function submitForm(e, cat, conf, contact) {
   e.preventDefault();
-  const name = $("#f_name").value.trim();
-  const email = $("#f_email").value.trim();
   const errEl = $("#formError");
   errEl.classList.remove("show");
-  if (!name || !email) return;
 
   const btn = $("#submitBtn");
   btn.disabled = true;
@@ -587,9 +616,9 @@ async function submitForm(e, cat, conf) {
 
   const fd = new FormData();
   fd.set("category", cat);
-  fd.set("full_name", name);
-  fd.set("email", $("#f_email").value.trim());
-  fd.set("phone", $("#f_phone").value.trim());
+  fd.set("full_name", contact.name);
+  fd.set("email", contact.email);
+  fd.set("phone", contact.phone);
   fd.set("details", ($("#f_details")?.value || "").trim());
   fd.set("fields_json", JSON.stringify(conf.collectExtra()));
   const files = $("#f_files").files;
