@@ -236,7 +236,7 @@ const CATEGORIES = {
     intro: "Συμπληρώστε τα στοιχεία σας για την πρόσληψη. Η φωτοτυπία ταυτότητας/διαβατηρίου μπορεί να προστεθεί και αργότερα, από το ίδιο αίτημα. Τα στοιχεία πρόσληψης (ημερομηνία, ειδικότητα, ωράριο κ.λπ.) θα τα συμπληρώσει ο υπεύθυνος προσωπικού.",
     extraFields: (data = {}) => window.PROSLIPSEIS_FIELDS.personalFields(data),
     collectExtra: () => window.PROSLIPSEIS_FIELDS.collectPersonal(),
-    detailsLabel: "Παρατηρήσεις",
+    // Χωρίς πεδίο "Παρατηρήσεις" — δεν χρειάζεται για αίτημα πρόσληψης.
     filesLabel: "Φωτοτυπία ταυτότητας / διαβατηρίου / άδειας παραμονής",
   },
   adeies: {
@@ -456,8 +456,6 @@ function renderProslipseisEditForm(t, saved) {
         </div>
       </div>
       ${window.PROSLIPSEIS_FIELDS.personalFields(fields)}
-      <label>Παρατηρήσεις <span class="opt">(προαιρετικό)</span></label>
-      <textarea id="f_details">${escapeHtml(t.details || "")}</textarea>
       <div class="form-error" id="formError"></div>
       <button type="submit" class="btn btn-primary" id="submitBtn">Αποθήκευση αλλαγών</button>
       <button type="button" class="btn btn-ghost" id="cancelEditBtn" style="width:100%;margin-top:6px;">Άκυρο</button>
@@ -483,7 +481,7 @@ async function submitEditForm(e, t, saved, existingFields) {
     full_name: name,
     email,
     phone: $("#f_phone").value.trim(),
-    details: $("#f_details").value.trim(),
+    // Χωρίς "details" — δεν υπάρχει πλέον πεδίο Παρατηρήσεων σε αυτή τη φόρμα, οπότε δεν αγγίζεται.
     // merge: κρατάει ό,τι "Στοιχεία πρόσληψης" έχει ήδη βάλει ο admin, δεν τα πειράζει ο αιτών.
     fields_json: JSON.stringify({ ...existingFields, ...window.PROSLIPSEIS_FIELDS.collectPersonal() }),
   };
@@ -554,8 +552,9 @@ function openForm(cat) {
         </div>
       </div>
       ${conf.extraFields()}
+      ${conf.detailsLabel ? `
       <label>${conf.detailsLabel} <span class="opt">(προαιρετικό)</span></label>
-      <textarea id="f_details"></textarea>
+      <textarea id="f_details"></textarea>` : ""}
       <label>${conf.filesLabel}</label>
       <input type="file" id="f_files" multiple />
       <div class="form-error" id="formError"></div>
@@ -583,7 +582,7 @@ async function submitForm(e, cat, conf) {
   fd.set("full_name", name);
   fd.set("email", $("#f_email").value.trim());
   fd.set("phone", $("#f_phone").value.trim());
-  fd.set("details", $("#f_details").value.trim());
+  fd.set("details", ($("#f_details")?.value || "").trim());
   fd.set("fields_json", JSON.stringify(conf.collectExtra()));
   const files = $("#f_files").files;
   for (const file of files) fd.append("files", file);
