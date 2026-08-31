@@ -217,19 +217,9 @@
   <div class="modal">
     <button class="close-x" data-close>✕</button>
     <h3>Έλεγχος αιτήματος</h3>
-    <p class="modal-sub">Επικολλήστε τον σύνδεσμο ή συμπληρώστε τον αριθμό &amp; τον κωδικό αιτήματος που λάβατε κατά την υποβολή.</p>
-    <label>Σύνδεσμος αιτήματος <span class="opt">(ή συμπληρώστε παρακάτω)</span></label>
+    <p class="modal-sub">Επικολλήστε τον σύνδεσμο αιτήματος που λάβατε κατά την υποβολή.</p>
+    <label>Σύνδεσμος αιτήματος</label>
     <input type="text" id="checkLinkInput" placeholder="https://.../?id=12&token=..." />
-    <div class="row2">
-      <div>
-        <label>Αριθμός αιτήματος</label>
-        <input type="text" id="checkIdInput" />
-      </div>
-      <div>
-        <label>Κωδικός</label>
-        <input type="text" id="checkTokenInput" />
-      </div>
-    </div>
     <div class="form-error" id="checkError">Δεν βρέθηκε αίτημα με αυτά τα στοιχεία.</div>
     <button class="btn btn-primary" id="checkSubmitBtn">Έλεγχος</button>
   </div>
@@ -672,11 +662,7 @@ $("#checkSubmitBtn").addEventListener("click", () => {
     } catch {}
   }
   if (!id || !token) {
-    id = $("#checkIdInput").value.trim();
-    token = $("#checkTokenInput").value.trim();
-  }
-  if (!id || !token) {
-    $("#checkError").textContent = "Συμπληρώστε τον σύνδεσμο ή τα δύο πεδία.";
+    $("#checkError").textContent = "Συμπληρώστε τον σύνδεσμο αιτήματος.";
     $("#checkError").classList.add("show");
     return;
   }
