@@ -17,6 +17,10 @@ window.PROSLIPSEIS_FIELDS = {
   _personalGroups(data = {}) {
     const v = (k) => escapeHtml(data[k] || "");
     const selOpt = (label, key) => `<option ${data[key] === label ? "selected" : ""}>${label}</option>`;
+    // Κενή πρώτη επιλογή σε κάθε select — χωρίς αυτήν το πρόγραμμα περιήγησης επιλέγει μόνο του την
+    // πρώτη επιλογή, οπότε το πεδίο φαίνεται "συμπληρωμένο" (και η καρτέλα πράσινη) χωρίς ο χρήστης
+    // να έχει διαλέξει τίποτα.
+    const blankOpt = (key) => `<option value="" ${data[key] ? "" : "selected"}>Επιλέξτε...</option>`;
     return [
       {
         label: "Γέννηση",
@@ -36,6 +40,7 @@ window.PROSLIPSEIS_FIELDS = {
         html: `
           <label>Ιθαγένεια</label>
           <select id="f_p_citizenship">
+            ${blankOpt("Ιθαγένεια")}
             ${selOpt("Έλληνας/ίδα", "Ιθαγένεια")}
             ${selOpt("Πολίτης ΕΟΚ", "Ιθαγένεια")}
             ${selOpt("Πολίτης εκτός ΕΟΚ", "Ιθαγένεια")}
@@ -60,13 +65,14 @@ window.PROSLIPSEIS_FIELDS = {
             <div>
               <label>Οικογενειακή κατάσταση</label>
               <select id="f_p_marital">
+                ${blankOpt("Οικογενειακή κατάσταση")}
                 ${selOpt("Άγαμος/η", "Οικογενειακή κατάσταση")}
                 ${selOpt("Έγγαμος/η", "Οικογενειακή κατάσταση")}
                 ${selOpt("Διαζευγμένος/η", "Οικογενειακή κατάσταση")}
                 ${selOpt("Χήρος/α", "Οικογενειακή κατάσταση")}
               </select>
             </div>
-            <div><label>Τέκνα έως 18 ετών</label><input type="number" id="f_p_children" min="0" value="${data["Τέκνα έως 18"] ?? "0"}" /></div>
+            <div><label>Τέκνα έως 18 ετών</label><input type="number" id="f_p_children" min="0" value="${v("Τέκνα έως 18")}" /></div>
           </div>
         `,
       },
@@ -81,6 +87,7 @@ window.PROSLIPSEIS_FIELDS = {
           <input type="text" id="f_p_ama" value="${v("Α.Μ.Α.")}" />
           <label>Εκπαίδευση</label>
           <select id="f_p_education">
+            ${blankOpt("Εκπαίδευση")}
             ${selOpt("Δημοτικό", "Εκπαίδευση")}
             ${selOpt("Γυμνάσιο", "Εκπαίδευση")}
             ${selOpt("Λύκειο", "Εκπαίδευση")}
@@ -133,6 +140,7 @@ window.PROSLIPSEIS_FIELDS = {
   hireFields(data = {}) {
     const v = (k) => escapeHtml(data[k] || "");
     const selOpt = (label, key) => `<option ${data[key] === label ? "selected" : ""}>${label}</option>`;
+    const blankOpt = (key) => `<option value="" ${data[key] ? "" : "selected"}>Επιλέξτε...</option>`;
     const schedule = {};
     (data["Ωράριο εργασίας"] || "").split(" · ").forEach((part) => {
       const idx = part.indexOf(": ");
@@ -147,6 +155,7 @@ window.PROSLIPSEIS_FIELDS = {
         <div>
           <label>Σύμβαση</label>
           <select id="f_p_contract">
+            ${blankOpt("Σύμβαση")}
             ${selOpt("Αορίστου χρόνου", "Σύμβαση")}
             ${selOpt("Ορισμένου χρόνου", "Σύμβαση")}
           </select>
