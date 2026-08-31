@@ -96,6 +96,10 @@
   .tab-btn:hover { color: var(--ink); background: rgba(255,255,255,.7); }
   .tab-btn.active { color: #fff; background: var(--blue); }
   .tab-btn.active:hover { color: #fff; background: var(--blue); }
+  /* Πράσινο = όλα τα πεδία της καρτέλας συμπληρωμένα. Κόκκινο = έφυγε από την καρτέλα ασυμπλήρωτη. */
+  .tab-btn.tab-complete { color: var(--green); background: #e3f5ec; }
+  .tab-btn.tab-incomplete { color: var(--red); background: #fbe4e4; }
+  .tab-btn.active.tab-complete, .tab-btn.active.tab-incomplete { box-shadow: inset 0 0 0 2px var(--blue); }
   .tab-panel { display: none; padding-top: 12px; }
   .tab-panel.active { display: block; }
 

@@ -192,6 +192,25 @@ window.PROSLIPSEIS_FIELDS = {
   },
 };
 
+// --- Καρτέλες: εναλλαγή + οπτική ένδειξη συμπλήρωσης ανά καρτέλα ---
+// Πράσινο φόντο μόλις συμπληρωθούν όλα τα πεδία μιας καρτέλας (ζωντανά, ενώ πληκτρολογεί).
+// Πολύ ανοιχτό κόκκινο μόνο όταν ο χρήστης αλλάξει καρτέλα αφήνοντας πίσω κάποια ασυμπλήρωτη —
+// όχι εξαρχής, για να μην "τρομάζει" μια φόρμα που μόλις άνοιξε.
+function fieldTabsPanelIsComplete(panel) {
+  const fields = panel.querySelectorAll("input, select, textarea");
+  return Array.from(fields).every((f) => (f.value || "").trim() !== "");
+}
+function fieldTabsSyncComplete(panel, btn) {
+  if (!panel || !btn) return;
+  btn.classList.toggle("tab-complete", fieldTabsPanelIsComplete(panel));
+}
+function fieldTabsMarkLeftIfIncomplete(panel, btn) {
+  if (!panel || !btn) return;
+  const complete = fieldTabsPanelIsComplete(panel);
+  btn.classList.toggle("tab-complete", complete);
+  btn.classList.toggle("tab-incomplete", !complete);
+}
+
 // Ένας μόνο delegated listener για όλες τις καρτέλες πεδίων, ώστε να μη χρειάζεται ξεχωριστός
 // κώδικας σε κάθε σελίδα που τις εμφανίζει (δουλεύει και μετά από innerHTML re-render).
 document.addEventListener("click", (e) => {
@@ -199,6 +218,46 @@ document.addEventListener("click", (e) => {
   if (!btn) return;
   const group = btn.closest(".field-tabs");
   if (!group) return;
-  group.querySelectorAll(".tab-btn").forEach((b) => b.classList.toggle("active", b === btn));
-  group.querySelectorAll(".tab-panel").forEach((p) => p.classList.toggle("active", p.id === btn.dataset.tabTarget));
+  const btns = Array.from(group.querySelectorAll(".tab-btn"));
+  const panels = Array.from(group.querySelectorAll(".tab-panel"));
+  const newIdx = btns.indexOf(btn);
+  const oldIdx = btns.findIndex((b) => b.classList.contains("active"));
+  if (oldIdx === newIdx) return;
+  if (oldIdx > -1) fieldTabsMarkLeftIfIncomplete(panels[oldIdx], btns[oldIdx]);
+
+  btns.forEach((b, i) => b.classList.toggle("active", i === newIdx));
+  panels.forEach((p, i) => p.classList.toggle("active", i === newIdx));
+
+  // Η καρτέλα που μόλις άνοιξε δεν δείχνει ποτέ κόκκινο — μόνο πράσινο αν τυχαίνει να είναι ήδη πλήρης.
+  btn.classList.remove("tab-incomplete");
+  fieldTabsSyncComplete(panels[newIdx], btn);
 });
+
+// Ζωντανή ενημέρωση του πράσινου όσο πληκτρολογεί/επιλέγει μέσα σε μια καρτέλα.
+["input", "change"].forEach((evt) =>
+  document.addEventListener(evt, (e) => {
+    const panel = e.target.closest(".tab-panel");
+    if (!panel) return;
+    const group = panel.closest(".field-tabs");
+    if (!group) return;
+    const panels = Array.from(group.querySelectorAll(".tab-panel"));
+    const idx = panels.indexOf(panel);
+    const btn = group.querySelectorAll(".tab-btn")[idx];
+    fieldTabsSyncComplete(panel, btn);
+  })
+);
+
+// Αρχική ενημέρωση (πράσινο μόνο) μόλις εμφανιστούν καρτέλες στη σελίδα — π.χ. στη φόρμα
+// επεξεργασίας όπου κάποιες καρτέλες μπορεί να είναι ήδη πλήρεις από πριν.
+new MutationObserver((mutations) => {
+  for (const m of mutations) {
+    for (const node of m.addedNodes) {
+      if (!(node instanceof Element)) continue;
+      const groups = node.matches(".field-tabs") ? [node] : Array.from(node.querySelectorAll(".field-tabs"));
+      groups.forEach((group) => {
+        const btns = group.querySelectorAll(".tab-btn");
+        group.querySelectorAll(".tab-panel").forEach((p, i) => fieldTabsSyncComplete(p, btns[i]));
+      });
+    }
+  }
+}).observe(document.body, { childList: true, subtree: true });
