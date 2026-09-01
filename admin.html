@@ -153,6 +153,7 @@
       <option value="proslipseis">Προσλήψεις</option>
       <option value="adeies">Άδειες</option>
       <option value="bebaioseis">Βεβαιώσεις</option>
+      <option value="ergasia">Αίτηση Εργασίας / Βιογραφικό</option>
     </select>
     <select id="filterStatus">
       <option value="">Όλες οι καταστάσεις</option>
@@ -189,7 +190,7 @@
 const $ = (sel, root = document) => root.querySelector(sel);
 const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
 
-const CATEGORY_LABELS = { proslipseis: "Προσλήψεις", adeies: "Άδειες", bebaioseis: "Βεβαιώσεις" };
+const CATEGORY_LABELS = { proslipseis: "Προσλήψεις", adeies: "Άδειες", bebaioseis: "Βεβαιώσεις", ergasia: "Αίτηση Εργασίας / Βιογραφικό" };
 const STATUS_LABELS = {
   pending: "Σε αναμονή",
   in_progress: "Σε εξέλιξη",
