@@ -99,6 +99,9 @@
   }
   textarea { min-height: 70px; resize: vertical; }
   .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  /* Σε στενές οθόνες η ετικέτα "Τηλέφωνο (προαιρετικό)" σπάει σε 2 γραμμές ενώ το "Email" όχι,
+     κάνοντας τα δύο πεδία να μην ευθυγραμμίζονται· γι' αυτό στοιβάζονται σε μία στήλη. */
+  @media (max-width: 480px) { .row2 { grid-template-columns: 1fr; } }
   .field-tabs { margin-top: 14px; }
   .tab-bar {
     display: flex; flex-wrap: wrap; gap: 4px; background: var(--bg);
