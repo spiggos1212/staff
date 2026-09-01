@@ -34,7 +34,7 @@
   header.page-head h1 .title-icon { font-size: 1.15em; line-height: 1; }
   header.page-head p { color: var(--muted); margin: 0; font-size: 0.98rem; }
 
-  .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 18px; }
   @media (max-width: 680px) { .grid { grid-template-columns: 1fr; } }
 
   .tile {
@@ -196,6 +196,11 @@
         <h2>Βεβαιώσεις</h2>
         <p>Βεβαίωση μισθοδοσίας ή εργασίας</p>
       </div>
+      <div class="tile" data-cat="ergasia">
+        <div class="icon">🧑‍💼</div>
+        <h2>Αίτηση Εργασίας / Βιογραφικό</h2>
+        <p>Στείλτε μας το βιογραφικό σας</p>
+      </div>
     </div>
     <div class="status-link">
       <a id="checkStatusLink">Έχετε ήδη υποβάλει αίτημα; Ελέγξτε την κατάστασή του</a>
@@ -290,6 +295,16 @@ const CATEGORIES = {
     }),
     detailsLabel: "Σχόλια",
     filesLabel: "Επισύναψη (προαιρετικό)",
+  },
+  ergasia: {
+    label: "Αίτηση Εργασίας / Βιογραφικό",
+    icon: "🧑‍💼",
+    intro: "Συμπληρώστε τα στοιχεία επικοινωνίας σας και επισυνάψτε το βιογραφικό σας (CV).",
+    extraFields: () => "",
+    collectExtra: () => ({}),
+    filesLabel: "Βιογραφικό (CV)",
+    successTitle: "Ευχαριστούμε!",
+    successMessage: "Λάβαμε την αίτησή σας και το βιογραφικό σας. Θα επικοινωνήσουμε μαζί σας αν προκύψει κατάλληλη θέση.",
   },
 };
 
@@ -620,7 +635,7 @@ async function submitForm(e, cat, conf, contact) {
     const data = await res.json();
     if (!res.ok) throw new Error(data.error || "error");
     if (cat === "proslipseis") saveTicketRef("proslipseis", data.id, data.access_token);
-    showSuccess(data.id, data.access_token);
+    showSuccess(data.id, data.access_token, conf);
   } catch {
     errEl.textContent = "Κάτι πήγε στραβά. Δοκιμάστε ξανά.";
     errEl.classList.add("show");
@@ -629,12 +644,13 @@ async function submitForm(e, cat, conf, contact) {
   }
 }
 
-function showSuccess(id, token) {
+function showSuccess(id, token, conf = {}) {
   const link = `${location.origin}${location.pathname}?id=${id}&token=${token}`;
   $("#formModalBody").innerHTML = `
     <div class="success-box">
       <div class="check">✅</div>
-      <h3>Το αίτημά σας καταχωρήθηκε</h3>
+      <h3>${conf.successTitle || "Το αίτημά σας καταχωρήθηκε"}</h3>
+      ${conf.successMessage ? `<p>${escapeHtml(conf.successMessage)}</p>` : ""}
       <p>Αριθμός αιτήματος: <strong>#${id}</strong></p>
       <div class="link-box">
         <input type="text" readonly value="${link}" id="successLink" />

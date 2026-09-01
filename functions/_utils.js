@@ -86,11 +86,12 @@ export function requireAdmin(request, env) {
   );
 }
 
-export const CATEGORIES = new Set(["proslipseis", "adeies", "bebaioseis"]);
+export const CATEGORIES = new Set(["proslipseis", "adeies", "bebaioseis", "ergasia"]);
 export const CATEGORY_LABELS = {
   proslipseis: "Προσλήψεις",
   adeies: "Άδειες",
   bebaioseis: "Βεβαιώσεις",
+  ergasia: "Αίτηση Εργασίας / Βιογραφικό",
 };
 
 // 'approved'/'rejected' χρησιμοποιούνται κυρίως από τις Άδειες (κουμπιά Έγκριση/Απόρριψη),
